@@ -60,7 +60,7 @@ namespace GameOfLifeLib
                     p.Y = y;
                     if (!allPieces.ContainsKey(p))
                     {
-                        PointPieces.Add(p, Dead.Get());
+                        PointPieces.Add(p, Piece.Get(PieceName.Dead));
                     }
                     else
                     {
@@ -85,10 +85,10 @@ namespace GameOfLifeLib
                     p.Y = y;
                     if (initialLiveCells.Contains(p))
                     {
-                        PointPieces.Add(p, Alive.Get());
+                        PointPieces.Add(p, Piece.Get(PieceName.Alive));
                     }
                     else
-                        PointPieces.Add(p, Dead.Get());
+                        PointPieces.Add(p, Piece.Get(PieceName.Dead));
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace GameOfLifeLib
                         PointPieces.Add(p, piece);
                     }
                     else
-                        PointPieces.Add(p, Dead.Get());
+                        PointPieces.Add(p, Piece.Get(PieceName.Dead));
                 }
             }
         }

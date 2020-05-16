@@ -10,6 +10,8 @@ namespace GameOfLifeLib.Rules
     {
         int _xtraCount1 = 0;
         int _xtraCount2 = 0;
+        public HashSet<Point> tweakPoints1 = new HashSet<Point>();
+        public HashSet<Point> tweakPoints2 = new HashSet<Point>();
 
         public LifeRuleCenterTwo(int randomLiveToAdd)
         {
@@ -22,9 +24,9 @@ namespace GameOfLifeLib.Rules
 
         public PieceGrid Run(PieceGrid currentGen)
         {
+            tweakPoints1.Clear();
+            tweakPoints2.Clear();
             PieceGrid nextGen = currentGen.Clone();
-            List<Point> tweakPoints1 = new List<Point>();
-            List<Point> tweakPoints2 = new List<Point>();
             foreach(var kvp in currentGen.PointPieces)
             {
                 int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen)
@@ -84,7 +86,7 @@ namespace GameOfLifeLib.Rules
                     int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(p, nextGen).Sum(n => nextGen.PointPieces[n].Value);
                     if (aliveNeighbors == 2)
                     {
-                        nextGen.PointPieces[p] = Piece.Get(PieceName.Alive, Owner.None);
+                        nextGen.PointPieces[p] = Piece.Get(PieceName.Alive, Owner.Player1, PieceAspect.Played);
                         _xtraCount1--;
                         break;
                     }
@@ -98,7 +100,7 @@ namespace GameOfLifeLib.Rules
                     int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(p, nextGen).Sum(n => nextGen.PointPieces[n].Value);
                     if (aliveNeighbors == 2)
                     {
-                        nextGen.PointPieces[p] = Piece.Get(PieceName.Alive, Owner.None);
+                        nextGen.PointPieces[p] = Piece.Get(PieceName.Alive, Owner.Player2, PieceAspect.Played);
                         _xtraCount2--;
                         break;
                     }

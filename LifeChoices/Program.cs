@@ -13,17 +13,25 @@ namespace LifeChoices
     {
         static IntPtr aliveBmp;
         static IntPtr alive1Bmp;
+        static IntPtr alive1PlayedBmp;
         static IntPtr alive2Bmp;
+        static IntPtr alive2PlayedBmp;
         static IntPtr deadBmp;
+        static IntPtr deadTweak1Bmp;
+        static IntPtr deadTweak2Bmp;
         static unsafe void Main(string[] args)
         {
             IntPtr windowPtr;
             SDL.SDL_Surface* screenSurface;
             InitSDL(out windowPtr, out screenSurface);
-            aliveBmp = SDL.SDL_LoadBMP("Alive.bmp");
-            alive1Bmp = SDL.SDL_LoadBMP("Alive1.bmp");
-            alive2Bmp = SDL.SDL_LoadBMP("Alive2.bmp");
-            deadBmp = SDL.SDL_LoadBMP("Dead.bmp");
+            aliveBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive.bmp"), screenSurface->format, 0);
+            alive1Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive1.bmp"), screenSurface->format, 0);
+            alive1PlayedBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive1Played.bmp"), screenSurface->format, 0);
+            alive2Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive2.bmp"), screenSurface->format, 0);
+            alive2PlayedBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive2Played.bmp"), screenSurface->format, 0);
+            deadBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Dead.bmp"), screenSurface->format, 0);
+            deadTweak1Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("DeadTweak1.bmp"), screenSurface->format, 0);
+            deadTweak2Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("DeadTweak2.bmp"), screenSurface->format, 0);
 
             /*
             IList<Point> initialLiveCells = new List<Point>()
@@ -63,9 +71,9 @@ namespace LifeChoices
             };
             PieceGrid currentGen = new PieceGrid(100);
             currentGen.Initialize(initialCells);
-            ICARule rule = new LifeRuleCenterTwo(int.MaxValue);
+            LifeRuleCenterTwo rule = new LifeRuleCenterTwo(int.MaxValue);
 
-            Render(currentGen, windowPtr, screenSurface);
+            Render(currentGen, new HashSet<Point>(), new HashSet<Point>(), windowPtr, screenSurface);
 
             bool quit = false;
             while (!quit)
@@ -76,14 +84,14 @@ namespace LifeChoices
                 }
                 PieceGrid nextGen = rule.Run(currentGen);
                 currentGen = nextGen;
-                Render(currentGen, windowPtr, screenSurface);
+                Render(currentGen, rule.tweakPoints1, rule.tweakPoints2, windowPtr, screenSurface);
             }
 
             SDL.SDL_DestroyWindow(windowPtr);
             SDL.SDL_Quit();
         }
 
-        private static unsafe void Render(PieceGrid pieceGrid, IntPtr windowPtr, SDL.SDL_Surface* screenSurface)
+        private static unsafe void Render(PieceGrid pieceGrid, HashSet<Point> tweakPoints1, HashSet<Point> tweakPoints2, IntPtr windowPtr, SDL.SDL_Surface* screenSurface)
         {
             SDL.SDL_Rect rect = new SDL.SDL_Rect();
             rect.h = 10;
@@ -94,20 +102,34 @@ namespace LifeChoices
                 rect.y = kvp.Key.Y * 10;
                 if (kvp.Value.Name == PieceName.Alive)
                 {
-                    switch(kvp.Value.Owner)
+                    switch (kvp.Value.Owner)
                     {
                         case Owner.None:
                             SDL.SDL_BlitSurface(aliveBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                             break;
                         case Owner.Player1:
-                            SDL.SDL_BlitSurface(alive1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                            if (kvp.Value.Aspect == PieceAspect.Played)
+                                SDL.SDL_BlitSurface(alive1PlayedBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                            else
+                                SDL.SDL_BlitSurface(alive1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                             break;
                         case Owner.Player2:
-                            SDL.SDL_BlitSurface(alive2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                            if (kvp.Value.Aspect == PieceAspect.Played)
+                                SDL.SDL_BlitSurface(alive2PlayedBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                            else
+                                SDL.SDL_BlitSurface(alive2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                             break;
                     }
                 }
-                else SDL.SDL_BlitSurface(deadBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                else
+                {
+                    if (tweakPoints1.Contains(kvp.Key))
+                        SDL.SDL_BlitSurface(deadTweak1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    else if (tweakPoints2.Contains(kvp.Key))
+                        SDL.SDL_BlitSurface(deadTweak2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    else
+                        SDL.SDL_BlitSurface(deadBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                }
             }
             SDL.SDL_UpdateWindowSurface(windowPtr);
         }

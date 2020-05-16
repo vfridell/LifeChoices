@@ -6,35 +6,22 @@ using System.Threading.Tasks;
 
 namespace GameOfLifeLib
 {
-    public enum PieceName { Dead, Alive };
+    public enum PieceName { Dead = 0, Alive = 1 };
     public enum Owner { None = 0, Player1 = 1, Player2 = 2 };
-    public abstract class Piece
+    public enum PieceAspect { Natural = 0, Played = 1 }
+    public struct Piece
     {
-        protected Piece() { }
+        public PieceName Name;
+        public int Value;
+        public Owner Owner;
+        public PieceAspect Aspect;
 
-        public abstract PieceName Name { get; }
-        public abstract int Value { get; }
-        public abstract Owner Owner { get; }
-
-        protected static Dead _dead = new Dead();
-
-        protected static Piece[] _livePieces = new Piece[3];
-        static Piece()
+        public static Piece Get(PieceName pieceName)=> Get(pieceName, Owner.None, PieceAspect.Natural);
+        public static Piece Get(PieceName pieceName, Owner owner) => Get(pieceName, owner, PieceAspect.Natural);
+        public static Piece Get(PieceName pieceName, Owner owner, PieceAspect aspect)
         {
-            _livePieces[0] = new AliveNoPlayer();
-            _livePieces[1] = new AlivePlayer1();
-            _livePieces[2] = new AlivePlayer2();
-        }
-
-        public static Piece Get(PieceName pieceName)
-        {
-            if (pieceName == PieceName.Dead) return _dead;
-            else return _livePieces[0];
-        }
-        public static Piece Get(PieceName pieceName, Owner owner)
-        {
-            if (pieceName == PieceName.Dead) return _dead;
-            return _livePieces[(int)owner];
+            if (pieceName == PieceName.Dead) return new Piece();
+            else return new Piece() { Name = PieceName.Alive, Owner = owner, Aspect = aspect, Value = 1};
         }
 
         public static Piece Get(string s)
@@ -42,45 +29,17 @@ namespace GameOfLifeLib
             switch (s)
             {
                 case "Dead":
-                    return _dead;
+                    return Get(PieceName.Dead);
                 case "AliveNoPlayer":
-                    return _livePieces[0];
+                    return Get(PieceName.Alive, Owner.None);
                 case "AlivePlayer1":
-                    return _livePieces[1];
+                    return Get(PieceName.Alive, Owner.Player1);
                 case "AlivePlayer2":
-                    return _livePieces[2];
+                    return Get(PieceName.Alive, Owner.Player2);
                 default:
                     throw new ArgumentException($"Invalid piece name: {s}");
             }
         }
 
     }
-
-    public class Dead : Piece
-    {
-        public override PieceName Name => PieceName.Dead;
-
-        public override int Value => 0;
-
-        public override Owner Owner => Owner.None;
-        public static Dead Get() => (Dead)Get(PieceName.Dead);
-    }
-    public abstract class Alive : Piece
-    {
-        public override PieceName Name => PieceName.Alive;
-        public override int Value => 1;
-        public static Alive Get() => (Alive)Get(PieceName.Alive);
-    }
-    public class AliveNoPlayer : Alive
-    {
-        public override Owner Owner => Owner.None;
-    }
-    public class AlivePlayer1 : Alive
-    {
-        public override Owner Owner => Owner.Player1;
-    }
-    public class AlivePlayer2 : Alive
-    {
-        public override Owner Owner => Owner.Player2;
-    }
-   }
+}
