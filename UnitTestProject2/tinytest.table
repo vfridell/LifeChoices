@@ -1,0 +1,5 @@
+﻿n_states:6
+neighborhood:vonNeumann
+symmetries:rotate4
+var a={1,2}
+0,a,3,4,5,a

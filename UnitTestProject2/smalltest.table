@@ -1,0 +1,8 @@
+﻿# Signals (2/3) pass alongside a wire (1):
+n_states:4
+neighborhood:vonNeumann
+symmetries:rotate4
+var a={2,3}
+var b={2,3}
+var c={2,3}
+a,0,b,1,c,b
