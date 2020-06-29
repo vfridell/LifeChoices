@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameOfLifeLib.Rules;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace GameOfLifeLib
         }
 
         /// <summary>
-        /// Create a new, empty PieceGrid of a given size and initialize it with a set of amazons
+        /// Create a new, empty PieceGrid of a given size and initialize it with a set of pieces 
         /// </summary>
         /// <param name="size">Size of the square grid</param>
         /// <param name="playerPieces">(Point, Amazon) dictionary to set up player pieces</param>
@@ -48,7 +49,7 @@ namespace GameOfLifeLib
         /// Set up a PieceGrid with a completely defined set of points
         /// </summary>
         /// <param name="allPieces">(Point, Piece) dictionary to set up all pieces</param>
-        /// <exception cref="ArgumentException">You must specify all points on the grid in the allPieces dictionary</exception>
+        /// <exception cref="ArgumentException">Any points not specified in the allPieces dictionary will have a value of zero (0)</exception>
         public void Initialize(IDictionary<Point, Piece> allPieces)
         {
             Point p;
@@ -60,7 +61,7 @@ namespace GameOfLifeLib
                     p.Y = y;
                     if (!allPieces.ContainsKey(p))
                     {
-                        PointPieces.Add(p, Piece.Get(PieceName.Dead));
+                        PointPieces.Add(p, Piece.Get(0));
                     }
                     else
                     {
@@ -74,7 +75,7 @@ namespace GameOfLifeLib
         /// Set up an empty PieceGrid with live cells at the given points
         /// </summary>
         /// <param name="initialLiveCells">point list to set up initital live cells</param>
-        public void Initialize(IList<Point> initialLiveCells)
+        public void Initialize(IList<Point> initialLiveCells, int liveValue = 1, int deadValue = 0)
         {
             Point p;
             for (int x = 0; x < Size; x++)
@@ -85,10 +86,10 @@ namespace GameOfLifeLib
                     p.Y = y;
                     if (initialLiveCells.Contains(p))
                     {
-                        PointPieces.Add(p, Piece.Get(PieceName.Alive));
+                        PointPieces.Add(p, Piece.Get(liveValue));
                     }
                     else
-                        PointPieces.Add(p, Piece.Get(PieceName.Dead));
+                        PointPieces.Add(p, Piece.Get(deadValue));
                 }
             }
         }
@@ -99,10 +100,10 @@ namespace GameOfLifeLib
         /// <param name="initialLiveCells">point list to set up initital live cells</param>
         /// <param name="pieceName">name of piece to place</param>
         /// <param name="owner">owner of piece to place</param>
-        public void Initialize(IList<Point> initialLiveCells, PieceName pieceName, Owner owner)
+        public void Initialize(IList<Point> initialLiveCells, Owner owner, int liveValue = 1, int deadValue = 0)
         {
             Point p;
-            var piece = Piece.Get(pieceName, owner);
+            var piece = Piece.Get(liveValue, owner);
             for (int x = 0; x < Size; x++)
             {
                 for (int y = 0; y < Size; y++)
@@ -114,7 +115,7 @@ namespace GameOfLifeLib
                         PointPieces.Add(p, piece);
                     }
                     else
-                        PointPieces.Add(p, Piece.Get(PieceName.Dead));
+                        PointPieces.Add(p, Piece.Get(deadValue));
                 }
             }
         }

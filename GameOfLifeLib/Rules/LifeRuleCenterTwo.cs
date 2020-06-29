@@ -30,39 +30,39 @@ namespace GameOfLifeLib.Rules
             foreach(var kvp in currentGen.PointPieces)
             {
                 int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen)
-                    .Sum(p => currentGen.PointPieces[p].Value);
+                    .Sum(p => currentGen.PointPieces[p].StateValue);
                 int aliveNeighbors1 = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen)
                     .Where(p => currentGen.PointPieces[p].Owner == Owner.Player1)
-                    .Sum(p => currentGen.PointPieces[p].Value);
+                    .Sum(p => currentGen.PointPieces[p].StateValue);
                 int aliveNeighbors2 = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen)
                     .Where(p => currentGen.PointPieces[p].Owner == Owner.Player2)
-                    .Sum(p => currentGen.PointPieces[p].Value);
-                switch(kvp.Value.Name)
+                    .Sum(p => currentGen.PointPieces[p].StateValue);
+                switch(kvp.Value.StateValue)
                 {
-                    case PieceName.Alive:
-                        if (aliveNeighbors < 2 || aliveNeighbors > 3) nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Dead);
-                        else nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive, kvp.Value.Owner);
+                    case 1:
+                        if (aliveNeighbors < 2 || aliveNeighbors > 3) nextGen.PointPieces[kvp.Key] = Piece.Get(0);
+                        else nextGen.PointPieces[kvp.Key] = Piece.Get(1, kvp.Value.Owner);
                         break;
-                    case PieceName.Dead:
+                    case 0:
                         bool added = false;
                         if (aliveNeighbors == 3)
                         {
                             added = true;
                             if(aliveNeighbors1 > aliveNeighbors2)
-                                nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive, Owner.Player1);
+                                nextGen.PointPieces[kvp.Key] = Piece.Get(1, Owner.Player1);
                             else if(aliveNeighbors2 > aliveNeighbors1)
-                                nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive, Owner.Player2);
+                                nextGen.PointPieces[kvp.Key] = Piece.Get(1, Owner.Player2);
                             else
-                                nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive, Owner.None);
+                                nextGen.PointPieces[kvp.Key] = Piece.Get(1, Owner.None);
                         }
                         //else if (aliveNeighbors == 6 && aliveNeighbors1 > 0 && aliveNeighbors2 > 0)
                         //{
                         //    added = true;
-                        //    nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive, Owner.None);
+                        //    nextGen.PointPieces[kvp.Key] = Piece.Get(1, Owner.None);
                         //}
                         else
                         {
-                            nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Dead);
+                            nextGen.PointPieces[kvp.Key] = Piece.Get(0);
                         }
 
                         if (aliveNeighbors1 > 0 && !added)
@@ -83,10 +83,10 @@ namespace GameOfLifeLib.Rules
             {
                 foreach(Point p in tweakPoints1.OrderBy(p => p.Distance(goalPoint)))
                 {
-                    int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(p, nextGen).Sum(n => nextGen.PointPieces[n].Value);
+                    int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(p, nextGen).Sum(n => nextGen.PointPieces[n].StateValue);
                     if (aliveNeighbors == 2)
                     {
-                        nextGen.PointPieces[p] = Piece.Get(PieceName.Alive, Owner.Player1, PieceAspect.Played);
+                        nextGen.PointPieces[p] = Piece.Get(1, Owner.Player1, PieceAspect.Played);
                         _xtraCount1--;
                         break;
                     }
@@ -97,10 +97,10 @@ namespace GameOfLifeLib.Rules
             {
                 foreach (Point p in tweakPoints2.OrderBy(p => p.Distance(goalPoint)))
                 {
-                    int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(p, nextGen).Sum(n => nextGen.PointPieces[n].Value);
+                    int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(p, nextGen).Sum(n => nextGen.PointPieces[n].StateValue);
                     if (aliveNeighbors == 2)
                     {
-                        nextGen.PointPieces[p] = Piece.Get(PieceName.Alive, Owner.Player2, PieceAspect.Played);
+                        nextGen.PointPieces[p] = Piece.Get(1, Owner.Player2, PieceAspect.Played);
                         _xtraCount2--;
                         break;
                     }

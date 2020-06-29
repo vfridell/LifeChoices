@@ -46,7 +46,7 @@ namespace LifeChoices
                 Point.Get(51, 52),
             };
             PieceGrid currentGen = new PieceGrid(100);
-            currentGen.Initialize(initialLiveCells, PieceName.Alive, Owner.None);
+            currentGen.Initialize(initialLiveCells, 1, Owner.None);
             //ICARule rule = new HighLifeRule();
             //ICARule rule = new LifeRule();
             //ICARule rule = new LifeRuleRandomOne(1000);
@@ -55,19 +55,19 @@ namespace LifeChoices
             IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
             {
                 // player 1 
-                {  Point.Get(25, 25), Piece.Get(PieceName.Alive, Owner.Player1) },
-                {  Point.Get(26, 25), Piece.Get(PieceName.Alive, Owner.Player1) },
-                {  Point.Get(25, 26), Piece.Get(PieceName.Alive, Owner.Player1) },
-                {  Point.Get(24, 26), Piece.Get(PieceName.Alive, Owner.Player1) },
-                {  Point.Get(25, 27), Piece.Get(PieceName.Alive, Owner.Player1) },
-                //{  Point.Get(26, 27), Piece.Get(PieceName.Alive, Owner.Player1) },
+                {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
+                //{  Point.Get(26, 27), Piece.Get(1, Owner.Player1) },
                 // player 2 
-                {  Point.Get(75, 75), Piece.Get(PieceName.Alive, Owner.Player2) },
-                {  Point.Get(76, 75), Piece.Get(PieceName.Alive, Owner.Player2) },
-                {  Point.Get(75, 76), Piece.Get(PieceName.Alive, Owner.Player2) },
-                {  Point.Get(74, 76), Piece.Get(PieceName.Alive, Owner.Player2) },
-                {  Point.Get(75, 77), Piece.Get(PieceName.Alive, Owner.Player2) },
-                //{  Point.Get(76, 77), Piece.Get(PieceName.Alive, Owner.Player2) },
+                {  Point.Get(75, 75), Piece.Get(1, Owner.Player2) },
+                {  Point.Get(76, 75), Piece.Get(1, Owner.Player2) },
+                {  Point.Get(75, 76), Piece.Get(1, Owner.Player2) },
+                {  Point.Get(74, 76), Piece.Get(1, Owner.Player2) },
+                {  Point.Get(75, 77), Piece.Get(1, Owner.Player2) },
+                //{  Point.Get(76, 77), Piece.Get(1, Owner.Player2) },
             };
             PieceGrid currentGen = new PieceGrid(100);
             currentGen.Initialize(initialCells);
@@ -100,7 +100,7 @@ namespace LifeChoices
             {
                 rect.x = kvp.Key.X * 10;
                 rect.y = kvp.Key.Y * 10;
-                if (kvp.Value.Name == PieceName.Alive)
+                if (kvp.Value.StateValue == 1)
                 {
                     switch (kvp.Value.Owner)
                     {

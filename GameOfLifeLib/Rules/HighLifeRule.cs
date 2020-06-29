@@ -13,17 +13,19 @@ namespace GameOfLifeLib.Rules
             PieceGrid nextGen = currentGen.Clone();
             foreach(var kvp in currentGen.PointPieces)
             {
-                int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen).Sum(p => currentGen.PointPieces[p].Value);
-                switch(kvp.Value.Name)
+                int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen).Sum(p => currentGen.PointPieces[p].StateValue);
+                switch(kvp.Value.StateValue)
                 {
-                    case PieceName.Alive:
-                        if (aliveNeighbors < 2 || aliveNeighbors > 3) nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Dead);
-                        else nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive);
+                    case 1:
+                        if (aliveNeighbors < 2 || aliveNeighbors > 3) nextGen.PointPieces[kvp.Key] = Piece.Get(0);
+                        else nextGen.PointPieces[kvp.Key] = Piece.Get(1);
                         break;
-                    case PieceName.Dead:
-                        if (aliveNeighbors == 3 || aliveNeighbors == 6) nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Alive);
-                        else nextGen.PointPieces[kvp.Key] = Piece.Get(PieceName.Dead);
+                    case 0:
+                        if (aliveNeighbors == 3 || aliveNeighbors == 6) nextGen.PointPieces[kvp.Key] = Piece.Get(1);
+                        else nextGen.PointPieces[kvp.Key] = Piece.Get(0);
                         break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
             return nextGen;

@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameOfLifeLib.Rules;
 
 namespace GameOfLifeLib
 {
-    public enum PieceName { Dead = 0, Alive = 1 };
-    public enum Owner { None = 0, Player1 = 1, Player2 = 2 };
-    public enum PieceAspect { Natural = 0, Played = 1 }
+
+    /// <summary>
+    /// A Piece must support all integer 
+    /// </summary>
     public struct Piece
     {
-        public PieceName Name;
-        public int Value;
-        public Owner Owner;
-        public PieceAspect Aspect;
+        public int StateValue { get; private set; }
+        public Owner Owner { get; private set; }
+        public PieceAspect Aspect { get; private set; }
 
-        public static Piece Get(PieceName pieceName)=> Get(pieceName, Owner.None, PieceAspect.Natural);
-        public static Piece Get(PieceName pieceName, Owner owner) => Get(pieceName, owner, PieceAspect.Natural);
-        public static Piece Get(PieceName pieceName, Owner owner, PieceAspect aspect)
+        public static Piece Get(int stateValue)=> Get(stateValue, Owner.None, PieceAspect.Natural);
+        public static Piece Get(int stateValue, Owner owner) => Get(stateValue, owner, PieceAspect.Natural);
+        public static Piece Get(int stateValue, Owner owner, PieceAspect aspect)
         {
-            if (pieceName == PieceName.Dead) return new Piece();
-            else return new Piece() { Name = PieceName.Alive, Owner = owner, Aspect = aspect, Value = 1};
+            return new Piece() { StateValue = stateValue, Owner = owner, Aspect = aspect};
         }
 
         public static Piece Get(string s)
@@ -29,13 +29,13 @@ namespace GameOfLifeLib
             switch (s)
             {
                 case "Dead":
-                    return Get(PieceName.Dead);
+                    return Get(0);
                 case "AliveNoPlayer":
-                    return Get(PieceName.Alive, Owner.None);
+                    return Get(1, Owner.None);
                 case "AlivePlayer1":
-                    return Get(PieceName.Alive, Owner.Player1);
+                    return Get(1, Owner.Player1);
                 case "AlivePlayer2":
-                    return Get(PieceName.Alive, Owner.Player2);
+                    return Get(1, Owner.Player2);
                 default:
                     throw new ArgumentException($"Invalid piece name: {s}");
             }
