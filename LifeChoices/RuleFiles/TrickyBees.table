@@ -1,0 +1,56 @@
+# (Alan Tennant)'s TrickyBees in Golly rule-table format. v1.01.1
+#
+# A chaotic rule where each state becomes progressively more inert in which patterns are surprisingly tricky to construct.
+#
+# Many more states ought to be possible, each progressivly less intresting than the last I do not wish to add them by hand.
+# Care should be taken when adding rules not to create rotated versions of previous rules.
+#
+n_states:18
+neighborhood:Moore
+symmetries:rotate4
+
+#all states
+var a={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var b={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var c={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var d={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var e={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var f={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var g={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+var h={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
+
+#bees
+0,17,a,b,c,d,17,e,f,17
+17,a,17,b,c,d,e,17,f,0
+0,16,16,16,16,16,a,b,c,16
+16,a,16,16,16,16,16,b,c,0
+0,15,15,15,a,15,b,c,d,15
+15,a,15,15,15,b,15,c,d,0
+0,14,14,a,14,14,b,c,d,14
+14,a,14,14,b,14,14,c,d,0
+0,13,13,a,b,13,c,d,e,13
+13,a,13,13,b,c,13,d,e,0
+0,12,a,12,12,12,b,c,d,12
+12,a,12,b,12,12,12,c,d,0
+0,11,a,11,b,11,c,d,e,11
+11,a,11,b,11,c,11,d,e,0
+0,10,a,b,10,10,c,d,e,10
+10,a,10,b,c,10,10,d,e,0
+0,9,a,b,c,9,d,e,f,9
+9,a,9,b,c,d,9,e,f,0
+0,8,8,8,8,a,b,c,d,8
+8,a,8,8,8,8,b,c,d,0
+0,7,7,a,7,b,c,d,e,7
+7,a,7,7,b,7,c,d,e,0
+0,6,a,6,6,b,c,d,e,6
+6,a,6,b,6,6,c,d,e,0
+0,5,a,b,5,c,d,e,f,5
+5,a,5,b,c,5,d,e,f,0
+0,4,4,4,a,b,c,d,e,4
+4,a,4,4,4,b,c,d,e,0
+0,3,a,3,b,c,d,e,f,3
+3,a,3,b,3,c,d,e,f,0
+0,2,2,a,b,c,d,e,f,2
+2,a,2,2,b,c,d,e,f,0
+0,1,a,b,c,d,e,f,g,1
+1,a,1,b,c,d,e,f,g,0

@@ -70,25 +70,34 @@ namespace LifeChoices
             //    {  Point.Get(75, 77), Piece.Get(1, Owner.Player2) },
             //    //{  Point.Get(76, 77), Piece.Get(1, Owner.Player2) },
             //};
+            //IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
+            //{
+            //    // player 1 
+            //    {  Point.Get(1, 1), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(2, 1), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(1, 2), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(0, 2), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(1, 3), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
+            //};
             IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
             {
                 // player 1 
-                {  Point.Get(1, 1), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(2, 1), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(1, 2), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(0, 2), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(1, 3), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(25, 25), Piece.Get(2, Owner.Player1) },
                 {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(50, 25), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(51, 25), Piece.Get(2, Owner.Player1) },
             };
             PieceGrid currentGen = new PieceGrid(100);
             currentGen.Initialize(initialCells);
             //LifeRuleCenterTwo rule = new LifeRuleCenterTwo(int.MaxValue);
             //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/HistoricalLife.table");
-            ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
+            ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Pilot.table");
+            //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
             //ICARule rule = new LifeRule();
 
             Render(currentGen, new HashSet<Point>(), new HashSet<Point>(), windowPtr, screenSurface);
@@ -139,6 +148,10 @@ namespace LifeChoices
                                 SDL.SDL_BlitSurface(alive2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                             break;
                     }
+                }
+                else if (kvp.Value.StateValue == 2)
+                {
+                        SDL.SDL_BlitSurface(deadTweak1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                 }
                 else
                 {

@@ -38,6 +38,7 @@ namespace GameOfLifeLib.Rules
         {
             IEnumerable<Point> neighborhoodPoints = PointHelpers.GetAdjacentPointsToroid(point, currentGen, PointHelpers.NeighborhoodOrder.MooreRuleTable);
             List<int> neighborhood = new List<int>();
+            neighborhood.Add(piece.StateValue);
             foreach (Point p in neighborhoodPoints) neighborhood.Add(currentGen.PointPieces[p].StateValue);
             if (RuleDictionary.TryGetValue(GetKeyString(neighborhood), out int stateValue))
             {
