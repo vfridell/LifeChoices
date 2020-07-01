@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SDL2;
 using GameOfLifeLib;
 using GameOfLifeLib.Rules;
+using GameOfLifeLib.Parsers;
 
 namespace LifeChoices
 {
@@ -52,26 +53,43 @@ namespace LifeChoices
             //ICARule rule = new LifeRuleRandomOne(1000);
             */
 
+            //IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
+            //{
+            //    // player 1 
+            //    {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
+            //    //{  Point.Get(26, 27), Piece.Get(1, Owner.Player1) },
+            //    // player 2 
+            //    {  Point.Get(75, 75), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(76, 75), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(75, 76), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(74, 76), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(75, 77), Piece.Get(1, Owner.Player2) },
+            //    //{  Point.Get(76, 77), Piece.Get(1, Owner.Player2) },
+            //};
             IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
             {
                 // player 1 
+                {  Point.Get(1, 1), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(2, 1), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(1, 2), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(0, 2), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(1, 3), Piece.Get(1, Owner.Player1) },
                 {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
                 {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
                 {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
                 {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
                 {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
-                //{  Point.Get(26, 27), Piece.Get(1, Owner.Player1) },
-                // player 2 
-                {  Point.Get(75, 75), Piece.Get(1, Owner.Player2) },
-                {  Point.Get(76, 75), Piece.Get(1, Owner.Player2) },
-                {  Point.Get(75, 76), Piece.Get(1, Owner.Player2) },
-                {  Point.Get(74, 76), Piece.Get(1, Owner.Player2) },
-                {  Point.Get(75, 77), Piece.Get(1, Owner.Player2) },
-                //{  Point.Get(76, 77), Piece.Get(1, Owner.Player2) },
             };
             PieceGrid currentGen = new PieceGrid(100);
             currentGen.Initialize(initialCells);
-            LifeRuleCenterTwo rule = new LifeRuleCenterTwo(int.MaxValue);
+            //LifeRuleCenterTwo rule = new LifeRuleCenterTwo(int.MaxValue);
+            //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/HistoricalLife.table");
+            ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
+            //ICARule rule = new LifeRule();
 
             Render(currentGen, new HashSet<Point>(), new HashSet<Point>(), windowPtr, screenSurface);
 
@@ -84,7 +102,8 @@ namespace LifeChoices
                 }
                 PieceGrid nextGen = rule.Run(currentGen);
                 currentGen = nextGen;
-                Render(currentGen, rule.tweakPoints1, rule.tweakPoints2, windowPtr, screenSurface);
+                //Render(currentGen, rule.tweakPoints1, rule.tweakPoints2, windowPtr, screenSurface);
+                Render(currentGen, new HashSet<Point>(), new HashSet<Point>(), windowPtr, screenSurface);
             }
 
             SDL.SDL_DestroyWindow(windowPtr);

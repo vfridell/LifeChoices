@@ -7,14 +7,14 @@ using GameOfLifeLib.Parsers;
 
 namespace GameOfLifeLib.Rules
 {
-    public class RuleTableRule : ICARule
+    public class RuleTableCountStatesRule : ICARule
     {
         public RuleSymmetry Symmetry { get; private set; }
         public CANeighborhood Neighborhood { get; private set; }
         public int States { get; private set; }
         public Dictionary<string, int> RuleDictionary { get; set; }
 
-        public RuleTableRule(CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
+        public RuleTableCountStatesRule(CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
         {
             RuleDictionary = ruleDictionary;
             Neighborhood = neighborhood;
@@ -39,7 +39,11 @@ namespace GameOfLifeLib.Rules
             IEnumerable<Point> neighborhoodPoints = PointHelpers.GetAdjacentPointsToroid(point, currentGen, PointHelpers.NeighborhoodOrder.MooreRuleTable);
             List<int> neighborhood = new List<int>();
             foreach (Point p in neighborhoodPoints) neighborhood.Add(currentGen.PointPieces[p].StateValue);
-            if (RuleDictionary.TryGetValue(GetKeyString(neighborhood), out int stateValue))
+
+            List<int> sortedNeighborhood = neighborhood.OrderBy(s => s).ToList();
+            sortedNeighborhood.Insert(0, piece.StateValue);
+
+            if (RuleDictionary.TryGetValue(GetKeyString(sortedNeighborhood), out int stateValue))
             {
                 return Piece.Get(stateValue);
             }

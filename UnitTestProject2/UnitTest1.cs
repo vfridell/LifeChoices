@@ -12,7 +12,7 @@ namespace UnitTestProject2
         {
             //RuleFactory.GetRuleFromFile("wireworld_test.table");
             //RuleFactory.GetRuleFromFile("smalltest.table");
-            RuleFactory.GetRuleFromFile("tinytest.table");
+            //RuleFactory.GetRuleFromFile("tinytest.table");
         }
     }
 }

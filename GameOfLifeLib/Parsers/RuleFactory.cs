@@ -13,9 +13,7 @@ namespace GameOfLifeLib.Parsers
 {
     public class RuleFactory
     {
-
-        //public static ICARule GetRuleFromFile(string filename)
-        public static void GetRuleFromFile(string filename)
+        public static ICARule GetRuleFromFile(string filename)
         {
             AntlrFileStream fileStream = new AntlrFileStream(filename, Encoding.UTF8);
             RuleTableLexer ruleTableLexer = new RuleTableLexer(fileStream);
@@ -27,6 +25,10 @@ namespace GameOfLifeLib.Parsers
             RuleTableListener listener = new RuleTableListener();
             Antlr4.Runtime.Tree.ParseTreeWalker.Default.Walk(listener, context);
 
+            if (listener.Symmetry == RuleSymmetry.permute)
+                return new RuleTableCountStatesRule(listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
+            else
+                return new RuleTableRule(listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
         }
 
     }
@@ -40,6 +42,7 @@ namespace GameOfLifeLib.Parsers
         public List<List<string>> TransitionStringLists { get; set; } = new List<List<string>>();
         public List<List<string>> ExpandedTransitionStringLists { get; set; } = new List<List<string>>();
         public List<List<int>> TransitionLists { get; set; } = new List<List<int>>();
+        public Dictionary<string, int> TransitionDictionary { get; set; } = new Dictionary<string, int>();
 
         private int transitionListItemCount;
         private int transitionListsIndex;
@@ -103,19 +106,45 @@ namespace GameOfLifeLib.Parsers
 
         public override void ExitTableDef([NotNull] RuleTableParser.TableDefContext context)
         {
-            ExpandSymmetry();
-            //RemoveDuplicates();
-            List<List<int>> FinalResults = ExpandedTransitionStringLists.ConvertAll(l => l.ConvertAll(s => int.Parse(s)));
+            if (Symmetry == RuleSymmetry.permute)
+            {
+                CreateCountingDictionary();
+            }
+            else
+            {
+                ExpandSymmetry();
+                CreateTransitionDictionary();
+            }
         }
 
-        private void RemoveDuplicates()
+        private void CreateCountingDictionary()
         {
-            throw new NotImplementedException();
+            int neighborhoodSize = Neighborhood == CANeighborhood.Moore ? 9 : 5;
+            foreach (List<string> transitionStringList in ExpandedTransitionStringLists)
+            {
+                List<string> sortedNeighborhood = transitionStringList.Skip(1).Take(neighborhoodSize - 1).OrderBy(s => int.Parse(s)).ToList();
+                sortedNeighborhood.Insert(0, transitionStringList[0]);
+                string keyString = GetKeyString(sortedNeighborhood);
+                if (!TransitionDictionary.ContainsKey(keyString)) TransitionDictionary.Add(keyString, int.Parse(transitionStringList.Last()));
+            }
         }
+
+        private void CreateTransitionDictionary()
+        {
+            TransitionDictionary.Clear();
+            int neighborhoodSize = Neighborhood == CANeighborhood.Moore ? 9 : 5;
+            foreach(List<string> transitionStringList in ExpandedTransitionStringLists)
+            {
+                string keyString = GetKeyString(transitionStringList.Take(neighborhoodSize));
+                if (!TransitionDictionary.ContainsKey(keyString)) TransitionDictionary.Add(keyString, int.Parse(transitionStringList.Last()));
+            }
+        }
+
+        private string GetKeyString<T>(IEnumerable<T> neighborhood) => neighborhood.Skip(1).Aggregate(neighborhood.First().ToString(), (s2, s) => s2 + "," + s.ToString());
 
         private void ExpandSymmetry()
         {
-            if (Symmetry == RuleSymmetry.none) return;
+            if (Symmetry == RuleSymmetry.none || Symmetry == RuleSymmetry.permute) return;
 
             List<List<string>> NewTransitionStringLists = new List<List<string>>();
             List<List<int>> transforms = GetSymmetryTransforms();

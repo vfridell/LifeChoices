@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="PointStruct.cs" />
     <Compile Include="Rules\Enums.cs" />
+    <Compile Include="Rules\RuleTableCountStatesRule.cs" />
     <Compile Include="Rules\RuleTableRule.cs" />
     <Compile Include="Rules\ICARule.cs" />
     <Compile Include="LocationRuleFactory.cs" />
@@ -74,8 +75,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rules\HighLifeRule.cs" />
     <Compile Include="Rules\LifeRuleCenterTwo.cs" />
-    <Compile Include="Rules\LifeRuleRandomTwo.cs" />
-    <Compile Include="Rules\LifeRuleRandomOne.cs" />
     <Compile Include="Rules\LifeRule.cs" />
   </ItemGroup>
   <ItemGroup>

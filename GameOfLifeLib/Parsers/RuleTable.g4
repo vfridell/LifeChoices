@@ -11,7 +11,8 @@ stmt :
 	|	sym 
 	|	varline 
 	|	transitionline 
-	) (NEWLINE | EOF)
+	) (NEWLINE | EOF | COMMENT)
+	| COMMENT
 	| NEWLINE
 	| NEWLINE EOF
 	 ;
@@ -40,4 +41,4 @@ NUM					:	[0-9]+;
 WORD                :	(LOWERCASE | UPPERCASE | '_')+ ;
 WS					:	(' ' | '\t')+ -> channel(HIDDEN); 
 NEWLINE             :	('\r'? '\n' | '\r')+ ;
-COMMENT				:	'#' ~[\r\n]* NEWLINE -> channel(HIDDEN);
+COMMENT				:	'#' ~[\r\n]* NEWLINE ;
