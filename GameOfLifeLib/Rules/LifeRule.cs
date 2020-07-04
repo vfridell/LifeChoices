@@ -32,7 +32,7 @@ namespace GameOfLifeLib.Rules
                     if (aliveNeighbors == 3) return Piece.Get(1);
                     else return Piece.Get(0);
                 default:
-                    throw new NotImplementedException();
+                    return piece;
             }
         }
     }

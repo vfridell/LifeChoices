@@ -7,6 +7,7 @@ using SDL2;
 using GameOfLifeLib;
 using GameOfLifeLib.Rules;
 using GameOfLifeLib.Parsers;
+using GameOfLifeLib.Models;
 
 namespace LifeChoices
 {
@@ -20,6 +21,7 @@ namespace LifeChoices
         static IntPtr deadBmp;
         static IntPtr deadTweak1Bmp;
         static IntPtr deadTweak2Bmp;
+
         static unsafe void Main(string[] args)
         {
             IntPtr windowPtr;
@@ -78,29 +80,46 @@ namespace LifeChoices
             //    {  Point.Get(1, 2), Piece.Get(1, Owner.Player1) },
             //    {  Point.Get(0, 2), Piece.Get(1, Owner.Player1) },
             //    {  Point.Get(1, 3), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
+            //    {  Point.Get(25, 25), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(26, 25), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(25, 26), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player2) },
+            //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player2) },
             //};
             IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
             {
                 // player 1 
-                {  Point.Get(25, 25), Piece.Get(2, Owner.Player1) },
-                {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(50, 25), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(51, 25), Piece.Get(2, Owner.Player1) },
+                //{  Point.Get(25, 25), Piece.Get(2, Owner.Player2) },
+                //{  Point.Get(26, 25), Piece.Get(1, Owner.Player2) },
+                //{  Point.Get(50, 26), Piece.Get(1, Owner.Player2) },
+                //{  Point.Get(51, 26), Piece.Get(2, Owner.Player2) },
+                //{  Point.Get(23, 25), Piece.Get(2, Owner.Player2) },
+                //{  Point.Get(24, 25), Piece.Get(1, Owner.Player2) },
+
+                {  Point.Get(55, 75), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(56, 75), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(55, 76), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(54, 76), Piece.Get(1, Owner.Player1) },
+                {  Point.Get(55, 77), Piece.Get(1, Owner.Player1) },
             };
             PieceGrid currentGen = new PieceGrid(100);
             currentGen.Initialize(initialCells);
             //LifeRuleCenterTwo rule = new LifeRuleCenterTwo(int.MaxValue);
-            //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/HistoricalLife.table");
-            ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Pilot.table");
+            //ICARule rule2 = RuleFactory.GetRuleFromFile("RuleFiles/HistoricalLife.table");
+            ICARule rule1 = new LifeRule();
+            ICARule rule2 = RuleFactory.GetRuleFromFile("RuleFiles/Pilot.table");
             //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
-            //ICARule rule = new LifeRule();
 
-            Render(currentGen, new HashSet<Point>(), new HashSet<Point>(), windowPtr, screenSurface);
+            Random random = new Random();
+            Dictionary<ICARule, int> AllRules = new Dictionary<ICARule, int>() { { rule1, 1 },  { rule2, 1 } };
+            Dictionary<Point, ICARule> rulePoints = new Dictionary<Point, ICARule>();
+            foreach(var kvp in initialCells)
+            {
+                if (kvp.Value.Owner == Owner.Player1) rulePoints.Add(kvp.Key, rule1);
+                if (kvp.Value.Owner == Owner.Player2) rulePoints.Add(kvp.Key, rule2);
+            }
+
+            Render(currentGen, rulePoints, windowPtr, screenSurface);
 
             bool quit = false;
             while (!quit)
@@ -109,17 +128,51 @@ namespace LifeChoices
                 {
                     if (sdlEvent.type == SDL.SDL_EventType.SDL_QUIT) quit = true;
                 }
-                PieceGrid nextGen = rule.Run(currentGen);
+
+                PieceGrid nextGen = currentGen.Clone();
+                foreach (var kvp in currentGen.PointPieces)
+                {
+                    bool existingRule = rulePoints.TryGetValue(kvp.Key, out ICARule rule);
+                    List<Point> nPoints = PointHelpers.GetAdjacentPointsToroid(kvp.Key, currentGen, PointHelpers.NeighborhoodOrder.Moore).ToList();
+                    bool aliveNeighbors = nPoints.Any(p => currentGen.PointPieces[p].StateValue > 0);
+                    if (!existingRule && !aliveNeighbors) continue;
+
+                    if (!existingRule)
+                    {
+                        Dictionary<ICARule, int> LocalRules = nPoints.Select(p => rulePoints.TryGetValue(p, out ICARule r) ? r : RuleFactory.DefaultRule)
+                                                                     .GroupBy(r => r)
+                                                                     .ToDictionary(g => g.Key, g => g.Count());
+                        LocalRules.Remove(RuleFactory.DefaultRule);
+                        if (!LocalRules.Any()) LocalRules = AllRules;
+                        List<ICARule> choices = LocalRules.Where(c => c.Value == LocalRules.Max(k => k.Value)).Select(r => r.Key).ToList();
+                        if (choices.Count == 1)
+                            rule = choices.First();
+                        else
+                            rule = choices[random.Next(0, choices.Count - 1)];
+                        rulePoints.Add(kvp.Key, rule);
+                    }
+                    else if (!aliveNeighbors)
+                    {
+                        rulePoints.Remove(kvp.Key);
+                    }
+
+                    nextGen.PointPieces[kvp.Key] = rule.Run(currentGen, kvp.Key);
+
+                    //if(innerRuleArea.Contains(kvp.Key))
+                    //    nextGen.PointPieces[kvp.Key] = rule2.Run(currentGen, kvp.Key);
+                    //else 
+                    //    nextGen.PointPieces[kvp.Key] = rule1.Run(currentGen, kvp.Key);
+                }
+
                 currentGen = nextGen;
-                //Render(currentGen, rule.tweakPoints1, rule.tweakPoints2, windowPtr, screenSurface);
-                Render(currentGen, new HashSet<Point>(), new HashSet<Point>(), windowPtr, screenSurface);
+                Render(currentGen, rulePoints, windowPtr, screenSurface);
             }
 
             SDL.SDL_DestroyWindow(windowPtr);
             SDL.SDL_Quit();
         }
 
-        private static unsafe void Render(PieceGrid pieceGrid, HashSet<Point> tweakPoints1, HashSet<Point> tweakPoints2, IntPtr windowPtr, SDL.SDL_Surface* screenSurface)
+        private static unsafe void Render(PieceGrid pieceGrid, Dictionary<Point, ICARule> tweakPoints1, IntPtr windowPtr, SDL.SDL_Surface* screenSurface)
         {
             SDL.SDL_Rect rect = new SDL.SDL_Rect();
             rect.h = 10;
@@ -130,37 +183,32 @@ namespace LifeChoices
                 rect.y = kvp.Key.Y * 10;
                 if (kvp.Value.StateValue == 1)
                 {
-                    switch (kvp.Value.Owner)
-                    {
-                        case Owner.None:
-                            SDL.SDL_BlitSurface(aliveBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                            break;
-                        case Owner.Player1:
-                            if (kvp.Value.Aspect == PieceAspect.Played)
-                                SDL.SDL_BlitSurface(alive1PlayedBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                            else
-                                SDL.SDL_BlitSurface(alive1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                            break;
-                        case Owner.Player2:
-                            if (kvp.Value.Aspect == PieceAspect.Played)
-                                SDL.SDL_BlitSurface(alive2PlayedBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                            else
-                                SDL.SDL_BlitSurface(alive2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                            break;
-                    }
+                    SDL.SDL_BlitSurface(aliveBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                 }
                 else if (kvp.Value.StateValue == 2)
                 {
-                        SDL.SDL_BlitSurface(deadTweak1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    SDL.SDL_BlitSurface(alive1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                }
+                else if(kvp.Value.StateValue == 3)
+                {
+                    SDL.SDL_BlitSurface(alive2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+
                 }
                 else
                 {
-                    if (tweakPoints1.Contains(kvp.Key))
-                        SDL.SDL_BlitSurface(deadTweak1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                    else if (tweakPoints2.Contains(kvp.Key))
-                        SDL.SDL_BlitSurface(deadTweak2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    if (tweakPoints1.TryGetValue(kvp.Key, out ICARule rule))
+                    {
+                        if(rule is LifeRule)
+                            SDL.SDL_BlitSurface(deadTweak1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                        else if(rule is RuleTableRule)
+                            SDL.SDL_BlitSurface(deadTweak2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                        else
+                            SDL.SDL_BlitSurface(deadBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    }
                     else
+                    {
                         SDL.SDL_BlitSurface(deadBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    }
                 }
             }
             SDL.SDL_UpdateWindowSurface(windowPtr);

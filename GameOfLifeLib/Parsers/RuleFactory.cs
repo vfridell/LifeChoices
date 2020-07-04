@@ -8,11 +8,14 @@ using System.Threading.Tasks;
 using System.IO;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+using System.Collections.Concurrent;
 
 namespace GameOfLifeLib.Parsers
 {
     public class RuleFactory
     {
+        public static ICARule DefaultRule { get; private set; } = new NullRule();
+
         public static ICARule GetRuleFromFile(string filename)
         {
             AntlrFileStream fileStream = new AntlrFileStream(filename, Encoding.UTF8);
@@ -29,6 +32,22 @@ namespace GameOfLifeLib.Parsers
                 return new RuleTableCountStatesRule(listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
             else
                 return new RuleTableRule(listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
+        }
+
+        static ConcurrentDictionary<string, ICARule> _rulesCache { get; set; } = new ConcurrentDictionary<string, ICARule>();
+        public static ICARule GetRuleByName(string name)
+        {
+            if (_rulesCache.TryGetValue(name, out ICARule rule))
+                return rule;
+            else
+            {
+                if (name.Trim().ToLower().Equals("life"))
+                    rule = new LifeRule();
+                else
+                    rule = GetRuleFromFile($"RuleFiles/{name}.table");
+                _rulesCache[name] = rule;
+                return rule;
+            }
         }
 
     }

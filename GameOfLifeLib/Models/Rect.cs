@@ -34,7 +34,7 @@ namespace GameOfLifeLib.Models
             return true;
         }
 
-        internal bool Contains(Point point)
+        public bool Contains(Point point)
         {
             if (point.X < X || point.Y < Y || point.X > X + Width || point.Y > Y + Height) return false;
             return true;
