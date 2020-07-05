@@ -16,7 +16,7 @@ namespace GameOfLifeLib.Parsers
     {
         public static ICARule DefaultRule { get; private set; } = new NullRule();
 
-        public static ICARule GetRuleFromFile(string filename)
+        public static ICARule GetRuleFromFile(string name, string filename)
         {
             AntlrFileStream fileStream = new AntlrFileStream(filename, Encoding.UTF8);
             RuleTableLexer ruleTableLexer = new RuleTableLexer(fileStream);
@@ -29,9 +29,9 @@ namespace GameOfLifeLib.Parsers
             Antlr4.Runtime.Tree.ParseTreeWalker.Default.Walk(listener, context);
 
             if (listener.Symmetry == RuleSymmetry.permute)
-                return new RuleTableCountStatesRule(listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
+                return new RuleTableCountStatesRule(name, listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
             else
-                return new RuleTableRule(listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
+                return new RuleTableRule(name, listener.Neighborhood, listener.Symmetry, listener.NumStates, listener.TransitionDictionary);
         }
 
         static ConcurrentDictionary<string, ICARule> _rulesCache { get; set; } = new ConcurrentDictionary<string, ICARule>();
@@ -44,7 +44,7 @@ namespace GameOfLifeLib.Parsers
                 if (name.Trim().ToLower().Equals("life"))
                     rule = new LifeRule();
                 else
-                    rule = GetRuleFromFile($"RuleFiles/{name}.table");
+                    rule = GetRuleFromFile(name, $"RuleFiles/{name}.table");
                 _rulesCache[name] = rule;
                 return rule;
             }

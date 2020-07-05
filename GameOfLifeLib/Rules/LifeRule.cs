@@ -8,6 +8,8 @@ namespace GameOfLifeLib.Rules
 {
     public class LifeRule : ICARule
     {
+        public string Name => "Life";
+
         public PieceGrid Run(PieceGrid currentGen)
         {
             PieceGrid nextGen = currentGen.Clone();

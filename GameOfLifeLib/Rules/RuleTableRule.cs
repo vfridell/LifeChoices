@@ -13,9 +13,11 @@ namespace GameOfLifeLib.Rules
         public CANeighborhood Neighborhood { get; private set; }
         public int States { get; private set; }
         public Dictionary<string, int> RuleDictionary { get; set; }
+        public string Name { get; protected set; }
 
-        public RuleTableRule(CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
+        public RuleTableRule(string name, CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
         {
+            Name = name;
             RuleDictionary = ruleDictionary;
             Neighborhood = neighborhood;
             Symmetry = symmetry;

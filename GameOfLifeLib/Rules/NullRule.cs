@@ -8,6 +8,7 @@ namespace GameOfLifeLib.Rules
 {
     public class NullRule : ICARule
     {
+        public string Name => "NullRule";
         public PieceGrid Run(PieceGrid currentGen)
         {
             PieceGrid nextGen = currentGen.Clone();

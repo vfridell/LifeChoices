@@ -13,6 +13,8 @@ namespace GameOfLifeLib.Rules
         public HashSet<Point> tweakPoints1 = new HashSet<Point>();
         public HashSet<Point> tweakPoints2 = new HashSet<Point>();
 
+        public string Name => "LifeRuleCenterTwo";
+
         public LifeRuleCenterTwo(int randomLiveToAdd)
         {
             _xtraCount1 = randomLiveToAdd;

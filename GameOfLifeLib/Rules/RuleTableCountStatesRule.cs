@@ -9,12 +9,13 @@ namespace GameOfLifeLib.Rules
 {
     public class RuleTableCountStatesRule : ICARule
     {
+        public string Name { get; protected set; }
         public RuleSymmetry Symmetry { get; private set; }
         public CANeighborhood Neighborhood { get; private set; }
         public int States { get; private set; }
         public Dictionary<string, int> RuleDictionary { get; set; }
 
-        public RuleTableCountStatesRule(CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
+        public RuleTableCountStatesRule(string name, CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
         {
             RuleDictionary = ruleDictionary;
             Neighborhood = neighborhood;

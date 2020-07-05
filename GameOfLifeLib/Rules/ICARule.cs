@@ -8,6 +8,7 @@ namespace GameOfLifeLib.Rules
 {
     public interface ICARule
     {
+        string Name { get; }
         PieceGrid Run(PieceGrid currentGen);
         Piece Run(PieceGrid grid, Point point);
     }
