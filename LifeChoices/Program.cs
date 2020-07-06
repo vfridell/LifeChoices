@@ -14,15 +14,10 @@ namespace LifeChoices
     class Program
     {
         static IntPtr aliveBmp;
-        static IntPtr alive1Bmp;
-        static IntPtr alive1PlayedBmp;
-        static IntPtr alive2Bmp;
-        static IntPtr alive2PlayedBmp;
         static IntPtr deadBmp;
         static IntPtr deadTweak1Bmp;
-        static IntPtr deadTweak2Bmp;
         static int MaxStates = 36; // these are arbitrary 
-        static int MaxRules = 36; // these are arbitrary ;
+        static int MaxRules = 36; // these are arbitrary 
         static unsafe SDL.SDL_Surface* [] StateSurfaces = new SDL.SDL_Surface*[MaxStates];
         static unsafe SDL.SDL_Surface* [] RuleBackgroundSurfaces = new SDL.SDL_Surface*[MaxRules];
         static Dictionary<ICARule, int> RuleBackgroundIndexes = new Dictionary<ICARule, int>();
@@ -35,17 +30,9 @@ namespace LifeChoices
             InitSDL(out windowPtr, out screenSurface);
             aliveBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive.bmp"), screenSurface->format, 0);
             deadBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Dead.bmp"), screenSurface->format, 0);
-
-            alive1Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive1.bmp"), screenSurface->format, 0);
-            alive1PlayedBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive1Played.bmp"), screenSurface->format, 0);
-            alive2Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive2.bmp"), screenSurface->format, 0);
-            alive2PlayedBmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("Alive2Played.bmp"), screenSurface->format, 0);
             deadTweak1Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("DeadTweak1.bmp"), screenSurface->format, 0);
-            deadTweak2Bmp = SDL.SDL_ConvertSurface(SDL.SDL_LoadBMP("DeadTweak2.bmp"), screenSurface->format, 0);
 
-            IntPtr alive = SDL.SDL_LoadBMP("Alive.bmp");
-            GameOfLifeLib.Helpers.Combo.Combine(new List<byte>() { 0, 64, 128, 192, 255 }, 3, out List<List<byte>> output);
-            var output2 = new List<List<byte>>()
+            var rgbValues = new List<List<byte>>()
             {
                 new List<byte>() { 0, 0, 255 },
                 new List<byte>() { 0, 255, 255 },
@@ -54,21 +41,20 @@ namespace LifeChoices
                 new List<byte>() { 255, 0, 0 },
                 new List<byte>() { 0, 255, 0 },
             } ;
-            //GameOfLifeLib.Helpers.Combo.Permute(new LinkedList<byte>(new byte[] { 0, 254, 255 }), new List<byte>(), output2);
 
             int stateValue = 0;
             StateSurfaces[stateValue++] = (SDL.SDL_Surface*)deadBmp;
             StateSurfaces[stateValue++] = (SDL.SDL_Surface*)aliveBmp;
 
-            foreach (List<byte> rgbList in output2)
+            foreach (List<byte> rgbList in rgbValues)
             {
-                SDL.SDL_Surface* newStateSurface = (SDL.SDL_Surface*)SDL.SDL_ConvertSurface(alive, screenSurface->format, 0);
+                SDL.SDL_Surface* newStateSurface = (SDL.SDL_Surface*)SDL.SDL_ConvertSurface(aliveBmp, screenSurface->format, 0);
                 ColorMod(newStateSurface, rgbList[0], rgbList[1], rgbList[2]);
                 StateSurfaces[stateValue++] = newStateSurface;
             }
 
             int ruleIndex = 0;
-            foreach (List<byte> rgbList in output2)
+            foreach (List<byte> rgbList in rgbValues)
             {
                 SDL.SDL_Surface* newBgSurface = (SDL.SDL_Surface*)SDL.SDL_ConvertSurface(deadTweak1Bmp, screenSurface->format, 0);
                 ColorMod(newBgSurface, rgbList[0], rgbList[1], rgbList[2]);
@@ -204,16 +190,7 @@ namespace LifeChoices
                 {
                     if (tweakPoints1.TryGetValue(kvp.Key, out ICARule rule))
                     {
-
                         SDL.SDL_BlitSurface((IntPtr)RuleBackgroundSurfaces[RuleBackgroundIndexes[rule]], IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                        /*
-                        if(rule is LifeRule)
-                            SDL.SDL_BlitSurface(deadTweak1Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                        else if(rule is RuleTableRule)
-                            SDL.SDL_BlitSurface(deadTweak2Bmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                        else
-                            SDL.SDL_BlitSurface(deadBmp, IntPtr.Zero, (IntPtr)screenSurface, ref rect);
-                            */
                     }
                     else
                     {
