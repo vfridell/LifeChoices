@@ -221,10 +221,10 @@ namespace GameOfLifeLib.Parsers
                         addList = new List<int>() { 0,1,3,5,7 };
                         break;
                     case RuleSymmetry.rotate8:
-                        addList = new List<int>() { 2,3,4,5,6,7 };
+                        addList = new List<int>() { 2,3,4,5,6,7,8 };
                         break;
                     case RuleSymmetry.rotate8reflect:
-                        addList = new List<int>() { 0,1,2,3,4,5,6,7 };
+                        addList = new List<int>() { 0,1,2,3,4,5,6,7,8 };
                         break;
                     default:
                         throw new Exception($"Unsupported RuleSymmetry: {Symmetry}");

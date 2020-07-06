@@ -46,6 +46,24 @@ namespace GameOfLifeLib
         }
 
         /// <summary>
+        /// Set up a PieceGrid with a completely empty set of points
+        /// </summary>
+        /// <exception cref="ArgumentException">Any points not specified in the allPieces dictionary will have a value of zero (0)</exception>
+        public void Initialize()
+        {
+            Point p;
+            for (int x = 0; x < Size; x++)
+            {
+                for (int y = 0; y < Size; y++)
+                {
+                    p.X = x;
+                    p.Y = y;
+                    PointPieces.Add(p, Piece.Get(0));
+                }
+            }
+        }
+
+        /// <summary>
         /// Set up a PieceGrid with a completely defined set of points
         /// </summary>
         /// <param name="allPieces">(Point, Piece) dictionary to set up all pieces</param>

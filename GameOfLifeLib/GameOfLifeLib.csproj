@@ -54,6 +54,7 @@
     <Compile Include="Models\QuadTreeNode.cs" />
     <Compile Include="Models\Rect.cs" />
     <Compile Include="Models\RuleArea.cs" />
+    <Compile Include="Parsers\PatternFactory.cs" />
     <Compile Include="Parsers\RuleFactory.cs" />
     <Compile Include="Parsers\RuleTable.g4.lexer.cs">
       <DependentUpon>RuleTable.g4</DependentUpon>

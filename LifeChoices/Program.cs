@@ -72,33 +72,21 @@ namespace LifeChoices
             //ICARule rule1 = RuleFactory.GetRuleByName("Life");
             ICARule rule1 = RuleFactory.GetRuleByName("HistoricalLife");
             ICARule rule2 = RuleFactory.GetRuleByName("Pilot");
+            ICARule rule3 = RuleFactory.GetRuleByName("JustFriends");
             //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
             // the number is for counting the surrounding cells with a given rule. AllRules is defaulted to 1 on each rule as an arbitrary equality
-            AllRules = new Dictionary<ICARule, int>() { { rule1, 1 }, { rule2, 1 } };
+            AllRules = new Dictionary<ICARule, int>() { { rule1, 1 }, { rule2, 1 }, { rule3, 1} };
             int index = 0;
             foreach(ICARule rule in AllRules.Keys)
             {
                 RuleBackgroundIndexes.Add(rule, index++);
             }
 
-            /*
-            IList<Point> initialLiveCells = new List<Point>()
-            {
-                // R-pentomino
-                Point.Get(50, 50),
-                Point.Get(51, 50),
-                Point.Get(50, 51),
-                Point.Get(49, 51),
-                Point.Get(50, 52),
-                // something else
-                Point.Get(51, 52),
-            };
+            Random random = new Random();
+
+            Dictionary<Point, ICARule> rulePoints = new Dictionary<Point, ICARule>();
+
             PieceGrid currentGen = new PieceGrid(100);
-            currentGen.Initialize(initialLiveCells, 1, Owner.None);
-            //ICARule rule = new HighLifeRule();
-            //ICARule rule = new LifeRule();
-            //ICARule rule = new LifeRuleRandomOne(1000);
-            */
 
             //IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
             //{
@@ -131,6 +119,9 @@ namespace LifeChoices
             //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player2) },
             //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player2) },
             //};
+
+            /*
+
             IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
             {
                 // player 1 
@@ -147,17 +138,22 @@ namespace LifeChoices
                 {  Point.Get(54, 76), Piece.Get(1, Owner.Player1) },
                 {  Point.Get(55, 77), Piece.Get(1, Owner.Player1) },
             };
-            PieceGrid currentGen = new PieceGrid(100);
             currentGen.Initialize(initialCells);
-
-
-            Random random = new Random();
-
-            Dictionary<Point, ICARule> rulePoints = new Dictionary<Point, ICARule>();
-            foreach(var kvp in initialCells)
+            foreach (var kvp in initialCells)
             {
                 if (kvp.Value.Owner == Owner.Player1) rulePoints.Add(kvp.Key, rule1);
                 if (kvp.Value.Owner == Owner.Player2) rulePoints.Add(kvp.Key, rule2);
+            }
+            */
+
+            currentGen.Initialize();
+            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsTest.rle");
+            Point insertPoint = new Point(25, 50);
+            foreach(var kvp in pattern.Pattern.PointPieces)
+            {
+                Point p = insertPoint + kvp.Key;
+                currentGen.PointPieces[p] = kvp.Value;
+                rulePoints.Add(p, pattern.Rule);
             }
 
             Render(currentGen, rulePoints, windowPtr, screenSurface);

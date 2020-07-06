@@ -1,0 +1,37 @@
+# Just Friends - a rule by David Bell
+
+n_states:2
+neighborhood:Moore
+symmetries:rotate8
+
+var a={0,1}
+var b={0,1}
+var c={0,1}
+var d={0,1}
+var e={0,1}
+var f={0,1}
+var g={0,1}
+var h={0,1}
+
+# Survival Rules
+
+1,1,0,0,0,0,0,0,0,1
+1,1,1,0,0,0,0,0,0,1
+1,1,0,1,0,0,0,0,0,1
+1,1,0,0,1,0,0,0,0,1
+1,1,0,0,0,1,0,0,0,1
+
+# Birth exceptions
+
+0,1,1,0,0,0,0,0,0,0
+
+# Birth on two neighbours
+
+0,1,1,0,0,0,0,0,0,1
+0,1,0,1,0,0,0,0,0,1
+0,1,0,0,1,0,0,0,0,1
+0,1,0,0,0,1,0,0,0,1
+
+# Death otherwise
+
+1,a,b,c,d,e,f,g,h,0
