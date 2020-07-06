@@ -1,2 +1,5 @@
-x = 19, y = 10, rule = JustFriends
-2$5bobo3bobo$8bobo$2b2obobo3bobob2o$5bobo3bobo$5bobo3bobo$5bo7bo!
+x = 40, y = 14, rule = JustFriends
+12b3o$11bo2b2o$12bo2bo23bo$12b2obo23bo$32bo$2b3o5b21obo$bo2b2ob3o22bo
+5bo$2bo2bo4b20obo6bo$2b2obo25bo5bo$11b2obo$2obo7bo2bo$o2bo9bo$2bo8b2o$
+2o!
+

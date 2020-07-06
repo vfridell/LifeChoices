@@ -63,10 +63,14 @@ namespace GameOfLifeLib.Parsers
                         switch(c)
                         {
                             case '$':
-                                currentPoint.Y++;
                                 currentPoint.X = 0;
+                                for (int i = 0; i < num; i++)
+                                {
+                                    currentPoint.Y++;
+                                }
                                 break;
                             case 'b':
+                            case '.':
                                 for (int i = 0; i < num; i++)
                                 {
                                     newGrid.PointPieces[currentPoint] = Piece.Get(0);
@@ -74,9 +78,17 @@ namespace GameOfLifeLib.Parsers
                                 }
                                 break;
                             case 'o':
+                            case 'A':
                                 for (int i = 0; i < num; i++)
                                 {
                                     newGrid.PointPieces[currentPoint] = Piece.Get(1);
+                                    currentPoint.X++;
+                                }
+                                break;
+                            case 'B':
+                                for (int i = 0; i < num; i++)
+                                {
+                                    newGrid.PointPieces[currentPoint] = Piece.Get(2);
                                     currentPoint.X++;
                                 }
                                 break;

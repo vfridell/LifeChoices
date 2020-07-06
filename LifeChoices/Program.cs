@@ -45,8 +45,16 @@ namespace LifeChoices
 
             IntPtr alive = SDL.SDL_LoadBMP("Alive.bmp");
             GameOfLifeLib.Helpers.Combo.Combine(new List<byte>() { 0, 64, 128, 192, 255 }, 3, out List<List<byte>> output);
-            var output2 = new List<List<byte>>();
-            GameOfLifeLib.Helpers.Combo.Permute(new LinkedList<byte>(new byte[] { 0, 32, 255 }), new List<byte>(), output2);
+            var output2 = new List<List<byte>>()
+            {
+                new List<byte>() { 0, 0, 255 },
+                new List<byte>() { 0, 255, 255 },
+                new List<byte>() { 255, 255, 0 },
+                new List<byte>() { 255, 0, 255 },
+                new List<byte>() { 255, 0, 0 },
+                new List<byte>() { 0, 255, 0 },
+            } ;
+            //GameOfLifeLib.Helpers.Combo.Permute(new LinkedList<byte>(new byte[] { 0, 254, 255 }), new List<byte>(), output2);
 
             int stateValue = 0;
             StateSurfaces[stateValue++] = (SDL.SDL_Surface*)deadBmp;
@@ -69,13 +77,14 @@ namespace LifeChoices
 
             //LifeRuleCenterTwo rule = new LifeRuleCenterTwo(int.MaxValue);
             //ICARule rule2 = RuleFactory.GetRuleFromFile("RuleFiles/HistoricalLife.table");
-            //ICARule rule1 = RuleFactory.GetRuleByName("Life");
-            ICARule rule1 = RuleFactory.GetRuleByName("HistoricalLife");
+            ICARule rule1 = RuleFactory.GetRuleByName("Life");
+            //ICARule rule1 = RuleFactory.GetRuleByName("HistoricalLife");
             ICARule rule2 = RuleFactory.GetRuleByName("Pilot");
             ICARule rule3 = RuleFactory.GetRuleByName("JustFriends");
+            ICARule rule4 = RuleFactory.GetRuleByName("Seeds");
             //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
             // the number is for counting the surrounding cells with a given rule. AllRules is defaulted to 1 on each rule as an arbitrary equality
-            AllRules = new Dictionary<ICARule, int>() { { rule1, 1 }, { rule2, 1 }, { rule3, 1} };
+            AllRules = new Dictionary<ICARule, int>() { { rule1, 1 }, { rule2, 1 }, { rule3, 1}, { rule4, 1} };
             int index = 0;
             foreach(ICARule rule in AllRules.Keys)
             {
@@ -88,64 +97,6 @@ namespace LifeChoices
 
             PieceGrid currentGen = new PieceGrid(100);
 
-            //IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
-            //{
-            //    // player 1 
-            //    {  Point.Get(25, 25), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(26, 25), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(25, 26), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player1) },
-            //    //{  Point.Get(26, 27), Piece.Get(1, Owner.Player1) },
-            //    // player 2 
-            //    {  Point.Get(75, 75), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(76, 75), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(75, 76), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(74, 76), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(75, 77), Piece.Get(1, Owner.Player2) },
-            //    //{  Point.Get(76, 77), Piece.Get(1, Owner.Player2) },
-            //};
-            //IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
-            //{
-            //    // player 1 
-            //    {  Point.Get(1, 1), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(2, 1), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(1, 2), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(0, 2), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(1, 3), Piece.Get(1, Owner.Player1) },
-            //    {  Point.Get(25, 25), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(26, 25), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(25, 26), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(24, 26), Piece.Get(1, Owner.Player2) },
-            //    {  Point.Get(25, 27), Piece.Get(1, Owner.Player2) },
-            //};
-
-            /*
-
-            IDictionary<Point, Piece> initialCells = new Dictionary<Point, Piece>()
-            {
-                // player 1 
-                {  Point.Get(25, 25), Piece.Get(2, Owner.Player2) },
-                {  Point.Get(26, 25), Piece.Get(1, Owner.Player2) },
-                {  Point.Get(50, 26), Piece.Get(1, Owner.Player2) },
-                {  Point.Get(51, 26), Piece.Get(2, Owner.Player2) },
-                {  Point.Get(23, 25), Piece.Get(2, Owner.Player2) },
-                {  Point.Get(24, 25), Piece.Get(1, Owner.Player2) },
-
-                {  Point.Get(55, 75), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(56, 75), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(55, 76), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(54, 76), Piece.Get(1, Owner.Player1) },
-                {  Point.Get(55, 77), Piece.Get(1, Owner.Player1) },
-            };
-            currentGen.Initialize(initialCells);
-            foreach (var kvp in initialCells)
-            {
-                if (kvp.Value.Owner == Owner.Player1) rulePoints.Add(kvp.Key, rule1);
-                if (kvp.Value.Owner == Owner.Player2) rulePoints.Add(kvp.Key, rule2);
-            }
-            */
-
             currentGen.Initialize();
             CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsTest.rle");
             Point insertPoint = new Point(25, 50);
@@ -156,9 +107,36 @@ namespace LifeChoices
                 rulePoints.Add(p, pattern.Rule);
             }
 
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/LifeShip.rle");
+            insertPoint = new Point(50, 25);
+            foreach (var kvp in pattern.Pattern.PointPieces)
+            {
+                Point p = insertPoint + kvp.Key;
+                currentGen.PointPieces[p] = kvp.Value;
+                rulePoints.Add(p, pattern.Rule);
+            }
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SeedsSmall.rle");
+            insertPoint = new Point(2, 2);
+            foreach (var kvp in pattern.Pattern.PointPieces)
+            {
+                Point p = insertPoint + kvp.Key;
+                currentGen.PointPieces[p] = kvp.Value;
+                rulePoints.Add(p, pattern.Rule);
+            }
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/PilotSmall.rle");
+            insertPoint = new Point(80, 80);
+            foreach (var kvp in pattern.Pattern.PointPieces)
+            {
+                Point p = insertPoint + kvp.Key;
+                currentGen.PointPieces[p] = kvp.Value;
+                rulePoints.Add(p, pattern.Rule);
+            }
+
             Render(currentGen, rulePoints, windowPtr, screenSurface);
 
-            bool quit = false;
+             bool quit = false;
             while (!quit)
             {
                 while (SDL.SDL_PollEvent(out SDL.SDL_Event sdlEvent) != 0)

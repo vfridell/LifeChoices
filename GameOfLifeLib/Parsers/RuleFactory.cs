@@ -43,6 +43,8 @@ namespace GameOfLifeLib.Parsers
             {
                 if (name.Trim().ToLower().Equals("life"))
                     rule = new LifeRule();
+                else if (name.Trim().ToLower().Equals("seeds"))
+                    rule = new SeedsRule();
                 else
                     rule = GetRuleFromFile(name, $"RuleFiles/{name}.table");
                 _rulesCache[name] = rule;
