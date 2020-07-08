@@ -8,6 +8,7 @@ namespace GameOfLifeLib.Rules
 {
     public class SeedsRule : ICARule
     {
+        public int NumStates => 2;
         public string Name => "Seeds";
 
         public PieceGrid Run(PieceGrid currentGen)
@@ -24,7 +25,7 @@ namespace GameOfLifeLib.Rules
 
         public Piece Run(PieceGrid currentGen, Point point, Piece piece)
         {
-            int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(point, currentGen, PointHelpers.NeighborhoodOrder.Moore).Sum(p => currentGen.PointPieces[p].StateValue);
+            int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(point, currentGen, PointHelpers.NeighborhoodOrder.Moore).Count(p => currentGen.PointPieces[p].StateValue > 0);
             switch (piece.StateValue)
             {
                 case 1:

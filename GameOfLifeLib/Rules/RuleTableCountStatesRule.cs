@@ -12,7 +12,7 @@ namespace GameOfLifeLib.Rules
         public string Name { get; protected set; }
         public RuleSymmetry Symmetry { get; private set; }
         public CANeighborhood Neighborhood { get; private set; }
-        public int States { get; private set; }
+        public int NumStates { get; private set; }
         public Dictionary<string, int> RuleDictionary { get; set; }
 
         public RuleTableCountStatesRule(string name, CANeighborhood neighborhood, RuleSymmetry symmetry, int states, Dictionary<string, int> ruleDictionary)
@@ -20,7 +20,7 @@ namespace GameOfLifeLib.Rules
             RuleDictionary = ruleDictionary;
             Neighborhood = neighborhood;
             Symmetry = symmetry;
-            States = states;
+            NumStates = states;
         }
 
         public PieceGrid Run(PieceGrid currentGen)

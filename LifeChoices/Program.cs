@@ -68,9 +68,10 @@ namespace LifeChoices
             ICARule rule2 = RuleFactory.GetRuleByName("Pilot");
             ICARule rule3 = RuleFactory.GetRuleByName("JustFriends");
             ICARule rule4 = RuleFactory.GetRuleByName("Seeds");
+            ICARule rule5 = RuleFactory.GetRuleByName("HistoricalLife");
             //ICARule rule = RuleFactory.GetRuleFromFile("RuleFiles/Life.table");
             // the number is for counting the surrounding cells with a given rule. AllRules is defaulted to 1 on each rule as an arbitrary equality
-            AllRules = new Dictionary<ICARule, int>() { { rule1, 1 }, { rule2, 1 }, { rule3, 1}, { rule4, 1} };
+            AllRules = new Dictionary<ICARule, int>() { { rule1, 1 }, { rule2, 1 }, { rule3, 1}, { rule4, 1}, { rule5, 1} };
             int index = 0;
             foreach(ICARule rule in AllRules.Keys)
             {
@@ -80,6 +81,7 @@ namespace LifeChoices
             Random random = new Random();
 
             Dictionary<Point, ICARule> rulePoints = new Dictionary<Point, ICARule>();
+            Dictionary<Point, int> rulePointsAge = new Dictionary<Point, int>();
 
             PieceGrid currentGen = new PieceGrid(100);
 
@@ -122,7 +124,7 @@ namespace LifeChoices
 
             Render(currentGen, rulePoints, windowPtr, screenSurface);
 
-             bool quit = false;
+            bool quit = false;
             while (!quit)
             {
                 while (SDL.SDL_PollEvent(out SDL.SDL_Event sdlEvent) != 0)
@@ -140,24 +142,28 @@ namespace LifeChoices
 
                     if (!existingRule)
                     {
-                        Dictionary<ICARule, int> LocalRules = nPoints.Select(p => rulePoints.TryGetValue(p, out ICARule r) ? r : RuleFactory.DefaultRule)
-                                                                     .GroupBy(r => r)
-                                                                     .ToDictionary(g => g.Key, g => g.Count());
-                        LocalRules.Remove(RuleFactory.DefaultRule);
-                        if (!LocalRules.Any()) LocalRules = AllRules;
-                        List<ICARule> choices = LocalRules.Where(c => c.Value == LocalRules.Max(k => k.Value)).Select(r => r.Key).ToList();
-                        if (choices.Count == 1)
-                            rule = choices.First();
-                        else
-                            rule = choices[random.Next(0, choices.Count - 1)];
+                        rule = FewerStatesRule(random, rulePoints, nPoints);
                         rulePoints.Add(kvp.Key, rule);
+                        rulePointsAge[kvp.Key] = 1;
                     }
                     else if (!aliveNeighbors)
                     {
                         rulePoints.Remove(kvp.Key);
+                        rulePointsAge[kvp.Key] = 0;
+                    }
+                    else
+                    {
+                        if (rulePointsAge.ContainsKey(kvp.Key)) rulePointsAge[kvp.Key]++;
+                        else rulePointsAge[kvp.Key] = 1;
                     }
 
                     nextGen.PointPieces[kvp.Key] = rule.Run(currentGen, kvp.Key);
+
+                    //if(rulePointsAge[kvp.Key] > 10)
+                    //{
+                    //    rulePoints.Remove(kvp.Key);
+                    //    rulePointsAge[kvp.Key] = 0;
+                    //}
 
                     //if(innerRuleArea.Contains(kvp.Key))
                     //    nextGen.PointPieces[kvp.Key] = rule2.Run(currentGen, kvp.Key);
@@ -173,6 +179,55 @@ namespace LifeChoices
             SDL.SDL_Quit();
         }
 
+        private static unsafe RuleChooser MajorityRule = new RuleChooser((random, rulePoints, nPoints) =>
+        {
+           ICARule rule;
+           Dictionary<ICARule, int> LocalRules = nPoints.Select(p => rulePoints.TryGetValue(p, out ICARule r) ? r : RuleFactory.DefaultRule)
+                                            .GroupBy(r => r)
+                                            .ToDictionary(g => g.Key, g => g.Count());
+           LocalRules.Remove(RuleFactory.DefaultRule);
+           if (!LocalRules.Any()) LocalRules = AllRules;
+           else if (LocalRules.Count == 1) return LocalRules.First().Key;
+           List<ICARule> choices = LocalRules.Where(c => c.Value == LocalRules.Max(k => k.Value)).Select(r => r.Key).ToList();
+           if (choices.Count == 1)
+               rule = choices.First();
+           else
+               rule = choices[random.Next(0, choices.Count - 1)];
+           return rule;
+        });
+
+        static int[,] _ruleInfluenceValues = new int[7, 7] 
+        { 
+            {128, 64, 32, 16, 8, 4, 2 },
+            {256, 128, 64, 32, 16, 8, 4 },
+            {512, 256, 128, 64, 32, 16, 8 },
+            {1024, 512, 256, 128, 64, 32, 16 },
+            {2048, 1024, 512, 256, 128, 64, 32 },
+            {4092, 2048, 1024, 512, 256, 128, 64 },
+            {8184, 4092, 2048, 1024, 512, 256, 128 },
+        };
+        private static unsafe RuleChooser FewerStatesRule = new RuleChooser((random, rulePoints, nPoints) =>
+        {
+            ICARule rule;
+            Dictionary<ICARule, int> LocalRules = nPoints.Select(p => rulePoints.TryGetValue(p, out ICARule r) ? r : RuleFactory.DefaultRule)
+                                             .GroupBy(r => r)
+                                             .ToDictionary(g => g.Key, g => g.Count());
+            LocalRules.Remove(RuleFactory.DefaultRule);
+            if (!LocalRules.Any()) LocalRules = AllRules;
+            else if (LocalRules.Count == 1) return LocalRules.First().Key;
+            int ruleInfluenceMinRank = LocalRules.Min(k => _ruleInfluenceValues[k.Key.NumStates - 2, k.Value - 1]);
+            List<ICARule> choices = LocalRules.Where(k => _ruleInfluenceValues[k.Key.NumStates - 2, k.Value - 1] == ruleInfluenceMinRank)
+                                              .Select(r => r.Key)
+                                              .ToList();
+            if (choices.Count == 1)
+                rule = choices.First();
+            else
+                rule = choices[random.Next(0, choices.Count - 1)];
+            return rule;
+        });
+
+        public delegate ICARule RuleChooser(Random random, Dictionary<Point, ICARule> rulePoints, List<Point> nPoints);
+
         private static unsafe void Render(PieceGrid pieceGrid, Dictionary<Point, ICARule> tweakPoints1, IntPtr windowPtr, SDL.SDL_Surface* screenSurface)
         {
             SDL.SDL_Rect rect = new SDL.SDL_Rect();
@@ -184,7 +239,7 @@ namespace LifeChoices
                 rect.y = kvp.Key.Y * 10;
                 if (kvp.Value.StateValue >= 1)
                 {
-                    SDL.SDL_BlitSurface((IntPtr)StateSurfaces[kvp.Value.StateValue], IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                    //SDL.SDL_BlitSurface((IntPtr)StateSurfaces[kvp.Value.StateValue], IntPtr.Zero, (IntPtr)screenSurface, ref rect);
                 }
                 else
                 {

@@ -8,6 +8,7 @@ namespace GameOfLifeLib.Rules
 {
     public class NullRule : ICARule
     {
+        public int NumStates => int.MaxValue;
         public string Name => "NullRule";
         public PieceGrid Run(PieceGrid currentGen)
         {
