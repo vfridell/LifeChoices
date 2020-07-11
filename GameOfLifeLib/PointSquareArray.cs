@@ -58,7 +58,15 @@ namespace GameOfLifeLib
 
         public void CopyTo(KeyValuePair<Point, T>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            int i = arrayIndex;
+            for (int x = 0; x < _arraySize; x++)
+            {
+                for (int y = 0; y < _arraySize; y++)
+                {
+                    Point point = new Point(x,y);
+                    array[i++] = new KeyValuePair<Point, T>(point, _pieces[x, y]);
+                }
+            }
         }
 
         public IEnumerator<KeyValuePair<Point, T>> GetEnumerator()

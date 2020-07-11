@@ -21,6 +21,7 @@ namespace GameOfLifeLib.Rules
             Neighborhood = neighborhood;
             Symmetry = symmetry;
             NumStates = states;
+            Name = name;
         }
 
         public PieceGrid Run(PieceGrid currentGen)
