@@ -38,7 +38,16 @@ namespace GameOfLifeLib.Rules
 
         public Piece Run(PieceGrid currentGen, Point point, Piece piece)
         {
-            IEnumerable<Point> neighborhoodPoints = PointHelpers.GetAdjacentPointsToroid(point, currentGen, PointHelpers.NeighborhoodOrder.MooreRuleTable);
+            PointHelpers.NeighborhoodOrder neighborhoodOrder;
+            if (Neighborhood == CANeighborhood.Moore)
+            {
+                neighborhoodOrder = PointHelpers.NeighborhoodOrder.MooreRuleTable;
+            }
+            else
+            {
+                neighborhoodOrder = PointHelpers.NeighborhoodOrder.VonNeumannRuleTable;
+            }
+            IEnumerable<Point> neighborhoodPoints = PointHelpers.GetAdjacentPointsToroid(point, currentGen, neighborhoodOrder);
             List<int> neighborhood = new List<int>();
             foreach (Point p in neighborhoodPoints) neighborhood.Add(currentGen.PointPieces[p].StateValue);
 

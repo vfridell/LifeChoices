@@ -8,7 +8,7 @@ namespace GameOfLifeLib.Rules
 {
     public class NullRule : ICARule
     {
-        public int NumStates => int.MaxValue;
+        public int NumStates => 0;
         public string Name => "NullRule";
         public PieceGrid Run(PieceGrid currentGen)
         {
@@ -18,7 +18,7 @@ namespace GameOfLifeLib.Rules
 
         public Piece Run(PieceGrid grid, Point point)
         {
-            return grid.PointPieces[point];
+            return Piece.Get(0);
         }
     }
 }

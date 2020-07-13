@@ -67,13 +67,16 @@ namespace LifeChoices
             Dictionary<Point, int> rulePointsAge;
             PieceGrid currentGen;
             // this functions sets up the intitial game
-            //SeedsLifeJustFriendsRandomGame(random, out rulePoints, out rulePointsAge, out currentGen);
-            SeedsSpreaderGame(random, out rulePoints, out rulePointsAge, out currentGen);
-            //OtherSpreaderGame(random, out rulePoints, out rulePointsAge, out currentGen);
+            //RandomGame(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
+            StrangeBlinker(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
+            //SeedsJustFriendsMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
+            //SerizawaPilotMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
             
             Render(currentGen, rulePoints, windowPtr, screenSurface);
 
             bool quit = false;
+            List<int> delayList = new List<int>() { 0, 20, 50, 100, 1000, 2000 };
+            int msDelayIndex = 0;
             while (!quit)
             {
 
@@ -96,6 +99,17 @@ namespace LifeChoices
                         }
                         Render(currentGen, rulePoints, windowPtr, screenSurface);
                     }
+                    else if (sdlEvent.type == SDL.SDL_EventType.SDL_KEYUP)
+                    {
+                        if ((sdlEvent.key.keysym.sym == SDL.SDL_Keycode.SDLK_KP_MINUS || sdlEvent.key.keysym.sym == SDL.SDL_Keycode.SDLK_MINUS) && msDelayIndex < delayList.Count - 1)
+                        {
+                            msDelayIndex++;
+                        }
+                        else if ((sdlEvent.key.keysym.sym == SDL.SDL_Keycode.SDLK_KP_PLUS || sdlEvent.key.keysym.sym == SDL.SDL_Keycode.SDLK_PLUS) && msDelayIndex > 0)
+                        {
+                            msDelayIndex--;
+                        }
+                    }
                 }
 
                 PieceGrid nextGen = currentGen.Clone();
@@ -108,7 +122,7 @@ namespace LifeChoices
 
                     if (!existingRule)
                     {
-                        rule = MajorityInRuleOrderChooser(random, rulePoints, nPoints);
+                        rule = ruleChooser(random, rulePoints, nPoints);
                         rulePoints.Add(kvp.Key, rule);
                         rulePointsAge[kvp.Key] = 1;
                     }
@@ -139,20 +153,20 @@ namespace LifeChoices
 
                 currentGen = nextGen;
                 Render(currentGen, rulePoints, windowPtr, screenSurface);
+                if(msDelayIndex > 0) System.Threading.Thread.Sleep(delayList[msDelayIndex]);
             }
 
             SDL.SDL_DestroyWindow(windowPtr);
             SDL.SDL_Quit();
         }
 
-        public delegate void GameSetup(Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen);
-        private static unsafe GameSetup SeedsSpreaderGame = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen) =>
+        public delegate void GameSetup(Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser);
+        private static unsafe GameSetup SeedsJustFriendsMix = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser) =>
         {
-            AllRulesRank.Add(RuleFactory.GetRuleByName("Life"));
+            ruleChooser = MajorityInRuleOrderChooser;
             AllRulesRank.Add(RuleFactory.GetRuleByName("JustFriends"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("Pilot"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("Seeds"));
-            //AllRulesRank.Add(RuleFactory.GetRuleByName("HistoricalLife"));
             int index = 0;
             RulesRankDictionary = AllRulesRank.ToDictionary(r => r, r => index++);
 
@@ -170,26 +184,16 @@ namespace LifeChoices
             Point insertPoint = new Point(25, 25);
             InsertPattern(rulePoints, currentGen, pattern, insertPoint);
 
-            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/GliderGunNE.rle");
-            insertPoint = new Point(35, 35);
-            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
-
             pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SeedsSmall.rle");
             insertPoint = new Point(2, 2);
             InsertPattern(rulePoints, currentGen, pattern, insertPoint);
-
-            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/PilotSmall.rle");
-            insertPoint = new Point(30, 58);
-            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
         });
 
-        private static unsafe GameSetup OtherSpreaderGame = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen) =>
+        private static unsafe GameSetup SerizawaPilotMix = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser) =>
         {
-            AllRulesRank.Add(RuleFactory.GetRuleByName("JustFriends"));
-            AllRulesRank.Add(RuleFactory.GetRuleByName("Life"));
+            ruleChooser = MajorityInRuleOrderChooser;
+            AllRulesRank.Add(RuleFactory.GetRuleByName("Serizawa"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("Pilot"));
-            AllRulesRank.Add(RuleFactory.GetRuleByName("Seeds"));
-            //AllRulesRank.Add(RuleFactory.GetRuleByName("HistoricalLife"));
             int index = 0;
             RulesRankDictionary = AllRulesRank.ToDictionary(r => r, r => index++);
 
@@ -203,30 +207,50 @@ namespace LifeChoices
             rulePointsAge = new Dictionary<Point, int>();
             currentGen = new PieceGrid(100);
             currentGen.Initialize();
-            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50.rle");
+
+            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SerizawaGunship.rle");
             Point insertPoint = new Point(25, 25);
             InsertPattern(rulePoints, currentGen, pattern, insertPoint);
 
-            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/GliderGunNE.rle");
-            insertPoint = new Point(35, 35);
-            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
-
-            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SeedsSmall.rle");
-            insertPoint = new Point(2, 2);
-            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
-
             pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/PilotSmall.rle");
-            insertPoint = new Point(30, 58);
+            insertPoint = new Point(70, 70);
             InsertPattern(rulePoints, currentGen, pattern, insertPoint);
         });
 
-        private static unsafe GameSetup SeedsLifeJustFriendsRandomGame = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen) =>
+        private static unsafe GameSetup StrangeBlinker = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser) =>
         {
-            AllRulesRank.Add(RuleFactory.GetRuleByName("Life"));
+            ruleChooser = MajorityInRuleOrderChooser;
             AllRulesRank.Add(RuleFactory.GetRuleByName("JustFriends"));
-            AllRulesRank.Add(RuleFactory.GetRuleByName("Pilot"));
+            AllRulesRank.Add(RuleFactory.GetRuleByName("Null"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("Seeds"));
-            //AllRulesRank.Add(RuleFactory.GetRuleByName("HistoricalLife"));
+            int index = 0;
+            RulesRankDictionary = AllRulesRank.ToDictionary(r => r, r => index++);
+
+            index = 0;
+            foreach (ICARule rule in Program.AllRulesRank)
+            {
+                RuleBackgroundIndexes.Add(rule, index++);
+            }
+
+            rulePoints = new Dictionary<Point, ICARule>();
+            rulePointsAge = new Dictionary<Point, int>();
+            currentGen = new PieceGrid(100);
+            currentGen.Initialize();
+
+            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SeedsJustFriendsStrangeBlinker.rle");
+            Point insertPoint = new Point(25, 25);
+            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
+            rulePoints[new Point(26, 26)] = RuleFactory.GetRuleByName("Seeds");
+            rulePoints[new Point(27, 27)] = RuleFactory.GetRuleByName("Seeds");
+
+        });
+
+        private static unsafe GameSetup RandomGame = new GameSetup((Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser) =>
+        {
+            ruleChooser = MajorityInRuleOrderChooser;
+            AllRulesRank.Add(RuleFactory.GetRuleByName("JustFriends"));
+            AllRulesRank.Add(RuleFactory.GetRuleByName("Null"));
+            AllRulesRank.Add(RuleFactory.GetRuleByName("Seeds"));
             int index = 0;
             RulesRankDictionary = AllRulesRank.ToDictionary(r => r, r => index++);
 
@@ -243,7 +267,7 @@ namespace LifeChoices
 
             foreach(var kvp in currentGen.PointPieces.ToArray())
             {
-                ICARule rule = AllRulesRank[random.Next(0, AllRulesRank.Count - 1)];
+                ICARule rule = AllRulesRank[random.Next(0, AllRulesRank.Count)];
                 int stateValue = random.Next(0, rule.NumStates);
                 currentGen.PointPieces[kvp.Key] = Piece.Get(stateValue);
                 rulePoints[kvp.Key] = rule;
@@ -292,7 +316,7 @@ namespace LifeChoices
         });
 
         // ruleInfluenceValues[i,j] 
-        // i = ranked criteria (e.g. number of states in Rule - 2)
+        // i = ranked criteria (e.g. index of rule in AllRulesRank list) OR (number of states in Rule - 2)
         // j = influence on center cell (i.e. number of cells with this rule in the neighborhood - 1)
         static int[,] _ruleInfluenceValues = new int[7, 7] 
         { 

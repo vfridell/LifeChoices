@@ -1,0 +1,63 @@
+# Serizawa, T. (1986) 3-state Neumann neighbor cellular automata capable
+# of constructing self-reproducing machine, Trans. IEICE Japan, J-69,
+# 653-660.
+#
+# Abstract:
+#
+# This paper defines the 3-state Neumann-neighbor cellular automata, and shows 
+# that its space is construction-universal. The proof for this is achieved by 
+# presenting a realization of self-reproducing machines. The state-transition 
+# rule and the basic operations of configurations of the cellular automata are 
+# described first. Then methods are shown to construct AND circuit, pulse 
+# generator, signal-line, delay circuit and memory circuit. Finally, the 
+# structure of the self-reproducing machine is shown, which is realized by 
+# combining those circuits. The machine has two construction arms, a Turing tape
+# and a timing loop. It can make a replica of its own using the Turing tape. The
+# machine can also be operated as a universal construction machine or a 
+# universal Turing machine.
+#
+# Thanks to Kenichi Morita for finding a copy of the paper.
+#
+# contact: tim.hutton@gmail.com
+
+n_states:3
+neighborhood:vonNeumann
+symmetries:rotate4reflect
+
+var a={0,1,2}
+var b={0,1,2}
+var c={0,1,2}
+var d={0,1,2}
+var e={0,1,2}
+
+# states: 0=empty, 1=white circle, 2=black circle
+# (transitions from Fig. 1)
+
+1,0,0,0,0,1
+0,0,0,2,0,1
+0,2,0,2,0,1
+0,0,2,2,0,1
+0,0,1,2,0,1
+1,2,0,2,0,1
+2,1,0,1,0,1
+0,0,1,1,1,1
+2,0,2,2,1,1
+1,0,2,1,2,1
+2,0,1,1,0,1
+1,0,2,2,0,1
+1,0,1,2,0,1
+0,1,1,1,1,1
+1,1,1,2,1,1
+2,1,1,1,1,1
+1,2,2,2,2,1
+
+2,0,0,0,0,2
+1,0,0,2,0,2
+1,1,0,2,0,2
+0,0,2,1,2,2
+0,0,2,2,1,2
+1,0,1,2,1,2
+1,0,1,1,1,2
+
+# all other configurations go to zero
+a,b,c,d,e,0
