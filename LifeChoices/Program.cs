@@ -35,7 +35,8 @@ namespace LifeChoices
             //StrangeBlinker(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
             //SeedsJustFriendsMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
             //SerizawaPilotMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
-            LifeGliderGunMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
+            //LifeGliderGunMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
+            LifeMegaMix(random, out rulePoints, out rulePointsAge, out currentGen, out RuleChooser ruleChooser);
 
             IntPtr windowPtr;
             SDL.SDL_Surface* screenSurface;
@@ -173,10 +174,12 @@ namespace LifeChoices
         private static void LifeMegaMix(Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser)
         {
             ruleChooser = MajorityInRuleOrderChooser;
+            AllRulesRank.Add(RuleFactory.GetRuleByName("JustFriends"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("Life"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("HighLife"));
-            AllRulesRank.Add(RuleFactory.GetRuleByName("JustFriends"));
             AllRulesRank.Add(RuleFactory.GetRuleByName("Seeds"));
+            AllRulesRank.Add(RuleFactory.GetRuleByName("B34568/S15678"));
+            AllRulesRank.Add(RuleFactory.GetRuleByName("B234"));
             int index = 0;
             RulesRankDictionary = AllRulesRank.ToDictionary(r => r, r => index++);
 
@@ -191,25 +194,35 @@ namespace LifeChoices
             currentGen = new PieceGrid(100);
             currentGen.Initialize();
 
-            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50.rle");
-            Point insertPoint = new Point(25, 25);
+            CAPattern pattern;
+            Point insertPoint;
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/PersianRugs.rle");
+            insertPoint = new Point(5, 5);
+            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SpiralGrowth.rle");
+            insertPoint = new Point(85, 45);
+            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
+
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50.rle");
+            insertPoint = new Point(25, 25);
             InsertPattern(rulePoints, currentGen, pattern, insertPoint);
 
             pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/GliderGunNE.rle");
             insertPoint = new Point(48, 31);
             InsertPattern(rulePoints, currentGen, pattern, insertPoint);
 
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/SeedsSmall.rle");
+            insertPoint = new Point(2, 2);
+            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
+
             //pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/GliderGunNE.rle");
             //insertPoint = new Point(55, 25);
             //InsertPattern(rulePoints, currentGen, pattern, insertPoint);
 
-            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/PilotSmall.rle");
-            insertPoint = new Point(1, 1);
-            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
-
-            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/PilotSmall.rle");
-            insertPoint = new Point(5, 5);
-            InsertPattern(rulePoints, currentGen, pattern, insertPoint);
         }
 
         private static void LifeGliderGunMix(Random random, out Dictionary<Point, ICARule> rulePoints, out Dictionary<Point, int> rulePointsAge, out PieceGrid currentGen, out RuleChooser ruleChooser)

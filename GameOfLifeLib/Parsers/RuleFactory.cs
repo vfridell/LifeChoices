@@ -41,9 +41,13 @@ namespace GameOfLifeLib.Parsers
                 return rule;
             else
             {
-                if (name.Trim().ToLower().Equals("life"))
+                if(LifeLikeRule.LifeLikeRuleString(name))
+                {
+                    rule = new LifeLikeRule(name, name);
+                }
+                else if (name.Trim().ToLower().Equals("life"))
                     rule = new LifeRule();
-                if (name.Trim().ToLower().Equals("highlife"))
+                else if (name.Trim().ToLower().Equals("highlife"))
                     rule = new HighLifeRule();
                 else if (name.Trim().ToLower().Equals("seeds"))
                     rule = new SeedsRule();
