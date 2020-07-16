@@ -13,7 +13,7 @@ namespace GameOfLifeLib.Parsers
     {
         static Regex headerRegex = new Regex(@"^x\s*=\s*([0-9]+)\s*,\s*y\s*=\s*([0-9]+)\s*,\s*rule\s*=\s*(.*)");
 
-        public static CAPattern GetPieceGridFromPatternFile(string filename)
+        public static CAPattern GetPieceGridFromPatternFile(string filename, bool padEmptySurrounding = true)
         {
             ICARule rule;
             PieceGrid newGrid;
@@ -39,8 +39,10 @@ namespace GameOfLifeLib.Parsers
                 int num = 1;
                 int x = 0;
                 int y = 0;
+                if (padEmptySurrounding) { x = 1; y = 1; }
                 Point currentPoint = new Point(x, y);
-                newGrid = new PieceGrid(Math.Max(patternWidth, patternHeight));
+                Point initialPoint = new Point(x, y);
+                newGrid = new PieceGrid(Math.Max(patternWidth + x, patternHeight + y));
                 newGrid.Initialize();
                 while (!reader.EndOfStream)
                 {
@@ -63,7 +65,7 @@ namespace GameOfLifeLib.Parsers
                         switch(c)
                         {
                             case '$':
-                                currentPoint.X = 0;
+                                currentPoint.X = initialPoint.X;
                                 for (int i = 0; i < num; i++)
                                 {
                                     currentPoint.Y++;

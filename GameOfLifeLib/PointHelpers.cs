@@ -83,5 +83,33 @@ namespace GameOfLifeLib
                 yield return next;
             }
         }
+
+        public static IEnumerable<Point> GetAdjacentPointsNotOutOfBounds(this Point centerPoint, PieceGrid grid, NeighborhoodOrder neighborhoodOrder)
+        {
+            int[] order = GetRuleOrderArray(neighborhoodOrder);
+
+            Point next;
+            for (int i = 0; i < order.Length; i++)
+            {
+                next = centerPoint;
+                next.Add(AdjacentPointDeltas[order[i]]);
+                if (grid.IsOutOfBounds(next)) continue;
+                yield return next;
+            }
+        }
+
+        public static Point AddPointsToroid(this Point point1, Point point2, PieceGrid grid)
+        {
+            Point next;
+            next = point1 + point2;
+            if (grid.IsOutOfBounds(next))
+            {
+                if (next.X < 0) next.X = (grid.Size) + next.X;
+                if (next.Y < 0) next.Y = (grid.Size) + next.Y;
+                if (next.X > grid.Size - 1) next.X = next.X - (grid.Size);
+                if (next.Y > grid.Size - 1) next.Y = next.Y - (grid.Size);
+            }
+            return next;
+        }
     }
 }
