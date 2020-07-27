@@ -19,7 +19,7 @@ namespace GameOfLifeLib.Helpers
             }
         }
 
-        public static void Combine<T>(List<T> workingList, List<T> items, int r, int depth, int parentIndex, List<List<T>> outputList)
+        private static void Combine<T>(List<T> workingList, List<T> items, int r, int depth, int parentIndex, List<List<T>> outputList)
         {
             if (depth == r)
             {

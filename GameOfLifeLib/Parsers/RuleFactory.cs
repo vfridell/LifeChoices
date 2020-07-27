@@ -60,6 +60,54 @@ namespace GameOfLifeLib.Parsers
             }
         }
 
+        public static ICARule GetStrengthenRule(ICARule rule1, ICARule rule2)
+        {
+            // guarantee order of rule1 and rule2 
+            string name1 = rule1.Name;
+            string name2 = rule2.Name;
+            if (rule1.Name.CompareTo(rule2.Name) > 0)
+            {
+                name1 = rule2.Name;
+                name2 = rule1.Name;
+            }
+
+            string ruleName = $"Strengthen ({name1}, {name2})";
+            if (_rulesCache.TryGetValue(ruleName, out ICARule rule))
+            {
+                return rule;
+            }
+            else
+            {
+                rule = new StrengthenRule(ruleName, rule1, rule2);
+                _rulesCache[ruleName] = rule;
+                return rule;
+            }
+        }
+
+        public static ICARule GetWeakenRule(ICARule rule1, ICARule rule2)
+        {
+            // guarantee order of rule1 and rule2 
+            string name1 = rule1.Name;
+            string name2 = rule2.Name;
+            if (rule1.Name.CompareTo(rule2.Name) > 0)
+            {
+                name1 = rule2.Name;
+                name2 = rule1.Name;
+            }
+
+            string ruleName = $"Weaken ({name1}, {name2})";
+            if (_rulesCache.TryGetValue(ruleName, out ICARule rule))
+            {
+                return rule;
+            }
+            else
+            {
+                rule = new WeakenRule(ruleName, rule1, rule2);
+                _rulesCache[ruleName] = rule;
+                return rule;
+            }
+        }
+
     }
 
     public class RuleTableListener : RuleTableBaseListener

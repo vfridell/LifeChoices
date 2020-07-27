@@ -55,7 +55,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Docs\Elemental Opposition.JPG" />
+    <None Include="Docs\table-01l-eight-trigrams-four-elements.jpg" />
     <None Include="packages.config" />
+    <None Include="RuleFiles\coral.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="RuleFiles\GliderGunNE.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -64,13 +64,14 @@
     </Compile>
     <Compile Include="PointStruct.cs" />
     <Compile Include="Rules\Enums.cs" />
+    <Compile Include="Rules\WeakenRule.cs" />
+    <Compile Include="Rules\StrengthenRule.cs" />
     <Compile Include="Rules\LifeLikeRule.cs" />
     <Compile Include="Rules\SeedsRule.cs" />
     <Compile Include="Rules\NullRule.cs" />
     <Compile Include="Rules\RuleTableCountStatesRule.cs" />
     <Compile Include="Rules\RuleTableRule.cs" />
     <Compile Include="Rules\ICARule.cs" />
-    <Compile Include="LocationRuleFactory.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="PieceGrid.cs" />
     <Compile Include="PointClass.cs" />
