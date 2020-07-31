@@ -49,11 +49,27 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="Helpers\Combo.cs" />
+    <Compile Include="Models\ToroidGameBase.cs" />
+    <Compile Include="Models\Games\LifeGliderGunMix.cs" />
+    <Compile Include="Models\Games\SerizawaPilotMix.cs" />
+    <Compile Include="Models\Games\StrangeBlinker.cs" />
+    <Compile Include="Models\Games\RandomGame.cs" />
+    <Compile Include="Models\Games\LifeMegaMix.cs" />
+    <Compile Include="Models\Games\CoralGame.cs" />
+    <Compile Include="Models\Games\ElementalGame.cs" />
+    <Compile Include="Models\Games\SeedsJustFriendsMix.cs" />
     <Compile Include="Models\IHaveRectangle.cs" />
+    <Compile Include="Models\IHazGame.cs" />
+    <Compile Include="Models\IRuleChooser.cs" />
     <Compile Include="Models\QuadTree.cs" />
     <Compile Include="Models\QuadTreeNode.cs" />
     <Compile Include="Models\Rect.cs" />
     <Compile Include="Models\RuleArea.cs" />
+    <Compile Include="Models\RuleChoosers\RankedRuleChooser.cs" />
+    <Compile Include="Models\RuleChoosers\ElementalRuleChooser.cs" />
+    <Compile Include="Models\RuleChoosers\FewerStatesRuleChooser.cs" />
+    <Compile Include="Models\RuleChoosers\MajorityRuleChooser.cs" />
+    <Compile Include="Models\RuleChoosers\MajorityInOrderRuleChooser.cs" />
     <Compile Include="Parsers\PatternFactory.cs" />
     <Compile Include="Parsers\RuleFactory.cs" />
     <Compile Include="Parsers\RuleTable.g4.lexer.cs">
@@ -89,6 +105,7 @@
       <CustomToolNamespace>GameOfLifeLib.Parsers</CustomToolNamespace>
     </Antlr4>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
