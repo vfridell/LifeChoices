@@ -16,8 +16,8 @@ namespace LifeChoices
 {
     class Program
     {
-        static int MaxStates = 36; // these are arbitrary 
-        static int MaxRules = 36; // these are arbitrary 
+        static int MaxStates = 11; // these are arbitrary 
+        static int MaxRules = 9; // these are arbitrary 
         static unsafe SDL.SDL_Surface* [] StateSurfaces = new SDL.SDL_Surface*[MaxStates];
         static unsafe SDL.SDL_Surface* [] RuleBackgroundSurfaces = new SDL.SDL_Surface*[MaxRules];
         static unsafe SDL.SDL_Surface* [] StateSurfacesMini = new SDL.SDL_Surface*[MaxStates];
@@ -53,7 +53,7 @@ namespace LifeChoices
             bool renderMini = false;
             InitSDL(game.CurrentGeneration, renderMini, out windowPtr, out screenSurface);
             CreateSpriteSurfaces(screenSurface);
-            //RenderSprites();
+            RenderSprites(renderMini, windowPtr, screenSurface);
 
             Render(game.CurrentGeneration, renderMini, game.RulePoints, windowPtr, screenSurface);
 
@@ -109,9 +109,43 @@ namespace LifeChoices
             SDL.SDL_Quit();
         }
 
-        private static void RenderSprites()
+        private static unsafe void RenderSprites(bool mini, IntPtr windowPtr, SDL.SDL_Surface* screenSurface)
         {
-            throw new NotImplementedException();
+            int size = 10;
+            
+            SDL.SDL_Surface*[] surfaces = StateSurfaces;
+            SDL.SDL_Surface*[] bgSurfaces = RuleBackgroundSurfaces;
+            if (mini)
+            {
+                size = 3;
+                surfaces = StateSurfacesMini;
+                bgSurfaces = RuleBackgroundSurfacesMini;
+            }
+            SDL.SDL_Rect rect = new SDL.SDL_Rect();
+            rect.h = size;
+            rect.w = size;
+            var pieceGrid = new PieceGrid(100);
+            int index = 0;
+            foreach (var kvp in pieceGrid.PointPieces)
+            {
+                rect.x = kvp.Key.X * size;
+                rect.y = kvp.Key.Y * size;
+                if (index < surfaces.Length)
+                {
+                    SDL.SDL_BlitSurface((IntPtr)surfaces[index++], IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                }
+                else if (index - surfaces.Length < bgSurfaces.Length)
+                {
+                    int convertedIndex = index - surfaces.Length;
+                    index++;
+                    SDL.SDL_BlitSurface((IntPtr)bgSurfaces[convertedIndex], IntPtr.Zero, (IntPtr)screenSurface, ref rect);
+                }
+                else
+                {
+                    index = 0;
+                }
+            }
+            SDL.SDL_UpdateWindowSurface(windowPtr);
         }
 
         private static unsafe void CreateSpriteSurfaces(SDL.SDL_Surface* screenSurface)
