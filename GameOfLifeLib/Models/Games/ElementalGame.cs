@@ -52,12 +52,12 @@ namespace GameOfLifeLib.Models.Games
             ((ElementalRuleChooser)_ruleChooser).RuleElements.Add(airEarth, new ElementalCombo(Element.Air, Element.Earth));
             ((ElementalRuleChooser)_ruleChooser).RuleElements.Add(fireWater, new ElementalCombo(Element.Fire, Element.Water));
 
-            _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("B3/S45678"), 3);
-            _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("JustFriends"), 0);
+            _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("B3/S45678"), 1);
+            _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("JustFriends"), 1);
             _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("Life"), 0);
-            _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("Seeds"), 2);
-            _ruleChooser.SetRuleRank(airFire, 6);
-            _ruleChooser.SetRuleRank(earthWater, 6);
+            _ruleChooser.SetRuleRank(RuleFactory.GetRuleByName("Seeds"), 3);
+            _ruleChooser.SetRuleRank(airFire, 2);
+            _ruleChooser.SetRuleRank(earthWater, 0);
             _ruleChooser.SetRuleRank(airEarth, 6);
             _ruleChooser.SetRuleRank(fireWater, 6);
 
@@ -74,7 +74,7 @@ namespace GameOfLifeLib.Models.Games
 
             //pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/GliderGunNE.rle");
             //insertPoint = new Point(48, 31);
-            //InsertPattern(rulePoints, currentGen, pattern, insertPoint);
+            //InsertPattern(pattern, insertPoint);
 
             pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/GliderGunNE.rle");
             insertPoint = new Point(95, 95);

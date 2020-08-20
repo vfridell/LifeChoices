@@ -16,7 +16,6 @@ namespace GameOfLifeLib.Models.RuleChoosers
 
         public override ICARule Choose(Random random, IHazGame game, List<Point> nPoints)
         {
-            ICARule rule;
             Dictionary<ICARule, int> localRules = nPoints.Select(p => game.RulePoints.TryGetValue(p, out ICARule r) ? r : RuleFactory.DefaultRule)
                                              .GroupBy(r => r)
                                              .ToDictionary(g => g.Key, g => g.Count());
@@ -30,33 +29,6 @@ namespace GameOfLifeLib.Models.RuleChoosers
                 return localRules.First().Key;
             }
 
-            ICARule air = RuleElements.FirstOrDefault(kvp => kvp.Value.Air && kvp.Value.ElementCount == 1).Key;
-            ICARule earth = RuleElements.FirstOrDefault(kvp => kvp.Value.Earth && kvp.Value.ElementCount == 1).Key;
-            ICARule fire = RuleElements.FirstOrDefault(kvp => kvp.Value.Fire && kvp.Value.ElementCount == 1).Key;
-            ICARule water = RuleElements.FirstOrDefault(kvp => kvp.Value.Water && kvp.Value.ElementCount == 1).Key;
-            ElementalCombo ec = new ElementalCombo(localRules.SelectMany(kvp => RuleElements[kvp.Key].Elements).ToArray());
-            switch (ec.ElementCount)
-            {
-                case 2:
-                    if (ec.Air && ec.Fire) return RuleFactory.GetStrengthenRule(air, fire);
-                    if (ec.Earth && ec.Water) return RuleFactory.GetStrengthenRule(earth, water);
-                    if (ec.Air && ec.Earth) return RuleFactory.GetWeakenRule(air, earth);
-                    if (ec.Fire && ec.Water) return RuleFactory.GetWeakenRule(fire, water);
-                    // others are Neutral
-                    break;
-                case 3:
-                    if (ec.Air && ec.Fire && ec.Water) return air;
-                    if (ec.Earth && ec.Fire && ec.Water) return earth;
-                    if (ec.Air && ec.Earth && ec.Water) return water;
-                    if (ec.Air && ec.Earth && ec.Fire) return fire;
-                    break;
-                case 4:
-                    // Neutral
-                    break;
-                default:
-                    throw new Exception("too many elements.");
-            }
-
             // Neutral
             int ruleInfluenceMinRank = localRules.Min(k => _ruleInfluenceValues[RulesRankDictionary[k.Key], k.Value - 1]);
             List<ICARule> choices = localRules.Where(k => _ruleInfluenceValues[RulesRankDictionary[k.Key], k.Value - 1] == ruleInfluenceMinRank)
@@ -64,14 +36,42 @@ namespace GameOfLifeLib.Models.RuleChoosers
                                               .ToList();
             if (choices.Count == 1)
             {
-                rule = choices[0];
+                return choices[0];
             }
             else
             {
-                rule = choices[random.Next(0, choices.Count - 1)];
+
+                ICARule air = RuleElements.FirstOrDefault(kvp => kvp.Value.Air && kvp.Value.ElementCount == 1).Key;
+                ICARule earth = RuleElements.FirstOrDefault(kvp => kvp.Value.Earth && kvp.Value.ElementCount == 1).Key;
+                ICARule fire = RuleElements.FirstOrDefault(kvp => kvp.Value.Fire && kvp.Value.ElementCount == 1).Key;
+                ICARule water = RuleElements.FirstOrDefault(kvp => kvp.Value.Water && kvp.Value.ElementCount == 1).Key;
+                ElementalCombo ec = new ElementalCombo(localRules.SelectMany(kvp => RuleElements[kvp.Key].Elements).ToArray());
+                switch (ec.ElementCount)
+                {
+                    case 1:
+                        throw new Exception("Not possible");
+                    case 2:
+                        if (ec.Air && ec.Fire) return RuleFactory.GetStrengthenRule(air, fire);
+                        if (ec.Earth && ec.Water) return RuleFactory.GetStrengthenRule(earth, water);
+                        if (ec.Air && ec.Earth) return RuleFactory.GetWeakenRule(air, earth);
+                        if (ec.Fire && ec.Water) return RuleFactory.GetWeakenRule(fire, water);
+                        // others are Neutral
+                        break;
+                    case 3:
+                        if (ec.Air && ec.Fire && ec.Water) return air;
+                        if (ec.Earth && ec.Fire && ec.Water) return earth;
+                        if (ec.Air && ec.Earth && ec.Water) return water;
+                        if (ec.Air && ec.Earth && ec.Fire) return fire;
+                        break;
+                    case 4:
+                        // pick something
+                        break;
+                    default:
+                        throw new Exception("too many elements.");
+                }
             }
 
-            return rule;
+            return choices[random.Next(0, choices.Count - 1)]; 
         }
     }
 

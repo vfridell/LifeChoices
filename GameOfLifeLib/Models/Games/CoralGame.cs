@@ -18,7 +18,11 @@ namespace GameOfLifeLib.Models.Games
 
             pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/coral.rle");
             insertPoint = new Point(5, 5);
-            InsertPattern(pattern, insertPoint);
+            InsertPattern(pattern, insertPoint, 0);
+
+            pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/persianrugs.rle");
+            insertPoint = new Point(55, 55);
+            InsertPattern(pattern, insertPoint, 1);
         }
 
     }
