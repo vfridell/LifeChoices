@@ -48,9 +48,9 @@ namespace LifeChoices
             //ToroidGameBase game = new CoralGame();
             //ToroidGameBase game = new SeedsJustFriendsMix();
             //ToroidGameBase game = new SerizawaPilotMix();
-            //ToroidGameBase game = new LifeGliderGunMix();
+            ToroidGameBase game = new LifeGliderGunMix();
             //ToroidGameBase game = new LifeMegaMix();
-            ToroidGameBase game = new ElementalGame();
+            //ToroidGameBase game = new ElementalGame();
 
             //game.Initialize(60, new MajorityRuleChooser());
             game.Initialize();
