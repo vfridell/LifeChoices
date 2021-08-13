@@ -37,7 +37,7 @@ namespace LifeChoices
             //Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
             //{
             //    //{ "Life" , 1 },
-            //    { "Seeds" , 6 },
+            //    { "Seeds" , 4 },
             //    //{ "JustFriends" , 1 },
             //    { "Serizawa" , 0 },
             //    //{ "B234" , 2 },
@@ -47,10 +47,11 @@ namespace LifeChoices
 
             //ToroidGameBase game = new CoralGame();
             //ToroidGameBase game = new SeedsJustFriendsMix();
+            ToroidGameBase game = new SeedsSerizawaPeriodic();
             //ToroidGameBase game = new SerizawaPilotMix();
             //ToroidGameBase game = new LifeGliderGunMix();
             //ToroidGameBase game = new LifeMegaMix();
-            ToroidGameBase game = new ElementalGame();
+            //ToroidGameBase game = new ElementalGame();
 
             //game.Initialize(60, new MajorityRuleChooser());
             game.Initialize();

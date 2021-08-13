@@ -1,4 +1,5 @@
-﻿using GameOfLifeLib.Parsers;
+﻿using GameOfLifeLib.Models.RuleChoosers;
+using GameOfLifeLib.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace GameOfLifeLib.Models.Games
     {
         public override void Initialize()
         {
-            base.Initialize();
+            base.Initialize(60, new MajorityInOrderRuleChooser());
 
             CAPattern pattern;
             Point insertPoint;

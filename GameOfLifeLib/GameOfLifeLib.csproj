@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="Helpers\Combo.cs" />
+    <Compile Include="Models\Games\SeedsSerizawaPeriodic.cs" />
     <Compile Include="Models\ToroidGameBase.cs" />
     <Compile Include="Models\Games\LifeGliderGunMix.cs" />
     <Compile Include="Models\Games\SerizawaPilotMix.cs" />
