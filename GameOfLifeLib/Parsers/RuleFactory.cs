@@ -18,7 +18,7 @@ namespace GameOfLifeLib.Parsers
 
         public static ICARule GetRuleFromFile(string name, string filename)
         {
-            AntlrFileStream fileStream = new AntlrFileStream(filename, Encoding.UTF8);
+            AntlrInputStream fileStream = new AntlrInputStream(File.OpenRead(filename));
             RuleTableLexer ruleTableLexer = new RuleTableLexer(fileStream);
             Antlr4.Runtime.CommonTokenStream tokenStream = new CommonTokenStream(ruleTableLexer);
             RuleTableParser ruleTableParser = new RuleTableParser(tokenStream);
@@ -341,7 +341,7 @@ namespace GameOfLifeLib.Parsers
         private void ExpandTransitionListVars(int transitionListsIndex)
         {
             List<string> currentList = TransitionStringLists[transitionListsIndex];
-            HashSet<string> vars = currentList.Where(s => s.Any(c => char.IsLetter(c))).ToHashSet();
+            HashSet<string> vars = new HashSet<string>(currentList.Where(s => s.Any(c => char.IsLetter(c))));
             ExpandedTransitionStringLists.Add(currentList.ToList());
             foreach(string v in vars)
             {

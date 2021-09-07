@@ -11,6 +11,7 @@ using GameOfLifeLib.Models;
 using GameOfLifeLib.Helpers;
 using GameOfLifeLib.Models.Games;
 using GameOfLifeLib.Models.RuleChoosers;
+using System.Diagnostics;
 
 namespace LifeChoices
 {
@@ -49,7 +50,7 @@ namespace LifeChoices
             //ToroidGameBase game = new SeedsJustFriendsMix();
             ToroidGameBase game = new SeedsSerizawaPeriodic();
             //ToroidGameBase game = new SerizawaPilotMix();
-            //ToroidGameBase game = new LifeGliderGunMix();
+            ToroidGameBase game = new LifeGliderGunMix();
             //ToroidGameBase game = new LifeMegaMix();
             //ToroidGameBase game = new ElementalGame();
 
