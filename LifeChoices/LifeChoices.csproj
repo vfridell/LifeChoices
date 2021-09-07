@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -55,8 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Docs\Elemental Opposition.JPG" />
-    <None Include="Docs\table-01l-eight-trigrams-four-elements.jpg" />
     <None Include="packages.config" />
     <None Include="RuleFiles\coral.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -152,6 +151,9 @@
     <Content Include="Dead.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Docs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
