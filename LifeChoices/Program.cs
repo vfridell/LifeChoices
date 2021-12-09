@@ -48,10 +48,10 @@ namespace LifeChoices
 
             //ToroidGameBase game = new CoralGame();
             //ToroidGameBase game = new SeedsJustFriendsMix();
-            ToroidGameBase game = new SeedsSerizawaPeriodic();
+            //ToroidGameBase game = new SeedsSerizawaPeriodic();
             //ToroidGameBase game = new SerizawaPilotMix();
-            ToroidGameBase game = new LifeGliderGunMix();
-            //ToroidGameBase game = new LifeMegaMix();
+            //ToroidGameBase game = new LifeGliderGunMix();
+            ToroidGameBase game = new LifeMegaMix();
             //ToroidGameBase game = new ElementalGame();
 
             //game.Initialize(60, new MajorityRuleChooser());
@@ -75,6 +75,7 @@ namespace LifeChoices
             bool quit = false;
             List<int> msDelayList = new List<int>() { 0, 20, 50, 100, 300, 500, 1000, 2000 };
             int msDelayIndex = 0;
+            int gen = 1;
             while (!quit)
             {
 
@@ -112,6 +113,7 @@ namespace LifeChoices
                             rulesOnlyDisplay = !rulesOnlyDisplay;
                         }
                     }
+                    if (gen++ > 1000) quit = true;
                 }
 
                 game.ExecuteGameLoop();
