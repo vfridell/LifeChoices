@@ -63,14 +63,14 @@ namespace GameOfLifeLib.Rules
             int aliveNeighbors = PointHelpers.GetAdjacentPointsToroid(point, currentGen, PointHelpers.NeighborhoodOrder.Moore).Count(p => currentGen.PointPieces[p].StateValue > 0);
             switch (piece.StateValue)
             {
-                case 1:
-                    if (SurvivalNeighborCounts.Contains(aliveNeighbors)) return Piece.Get(1);
-                    else return Piece.Get(0);
                 case 0:
                     if (BirthNeighborCounts.Contains(aliveNeighbors)) return Piece.Get(1);
                     else return Piece.Get(0);
                 default:
-                    throw new NotImplementedException();
+                case 1:
+                    if (SurvivalNeighborCounts.Contains(aliveNeighbors)) return Piece.Get(1);
+                    else return Piece.Get(0);
+                 //   throw new NotImplementedException();
             }
         }
     }

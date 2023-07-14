@@ -22,8 +22,8 @@ namespace MeasurePerformance
             int framesToRun = 1000;
             int maxSeconds = 100;
             //ToroidGameBase perfGame = new SeedsJustFriendsMix();
-            //ToroidGameBase perfGame = new CoralGame();
-            ToroidGameBase perfGame = new LifeMegaMix();
+            ToroidGameBase perfGame = new CoralGame();
+            //ToroidGameBase perfGame = new LifeMegaMix();
             //ToroidGameBase perfGame = new LifeGliderGunMix();
             perfGame.Initialize();
             int[] genPerSeconds = new int[maxSeconds];
@@ -32,7 +32,8 @@ namespace MeasurePerformance
             for (int i = 0; i < framesToRun; i++)
             {
                 perfGame.ExecuteGameLoop();
-                genPerSeconds[(long)(stopwatch.ElapsedMilliseconds / 1000)]++;
+                long indexSecond = (long)(stopwatch.ElapsedMilliseconds / 1000);
+                genPerSeconds[indexSecond]++;
             }
             stopwatch.Stop();
 
@@ -76,7 +77,8 @@ namespace MeasurePerformance
             foreach (int value in totalsPerState.Keys)
             {
                 double probability = (totalsPerState[value] / (double)totalCells);
-                entropy +=  -((totalsPerState[value] * probability * Math.Log2(probability)) / Math.Log2(2));
+                //entropy +=  -((totalsPerState[value] * probability * Math.Log2(probability)) / Math.Log2(totalsPerState.Count));
+                entropy +=  -(probability * Math.Log2(probability));
             }
             return entropy;
         }

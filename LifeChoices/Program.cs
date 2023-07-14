@@ -28,13 +28,14 @@ namespace LifeChoices
 
         static unsafe void Main(string[] args)
         {
-            //Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
-            //{
-            //    // persian rugs
-            //    { "B234" , 2 },
-            //    // coral
-            //    { "B3/S45678" , 0 },
-            //};
+            Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
+            {
+                { "JustFriends" , 0 },
+                // persian rugs
+                { "B234" , 2 },
+                // coral
+                { "B3/S45678" , 0 },
+            };
             //Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
             //{
             //    //{ "Life" , 1 },
@@ -44,14 +45,14 @@ namespace LifeChoices
             //    //{ "B234" , 2 },
             //    //{ "B3/S45678" , 0 },
             //};
-            //ToroidGameBase game = new RandomGame(RulesRankDictionary);
+            ToroidGameBase game = new RandomGame(RulesRankDictionary);
 
             //ToroidGameBase game = new CoralGame();
             //ToroidGameBase game = new SeedsJustFriendsMix();
             //ToroidGameBase game = new SeedsSerizawaPeriodic();
             //ToroidGameBase game = new SerizawaPilotMix();
             //ToroidGameBase game = new LifeGliderGunMix();
-            ToroidGameBase game = new LifeMegaMix();
+            //ToroidGameBase game = new LifeMegaMix();
             //ToroidGameBase game = new ElementalGame();
 
             //game.Initialize(60, new MajorityRuleChooser());
