@@ -13,7 +13,7 @@ namespace GameOfLifeLib.Models.Games
         {
             base.Initialize(gridSize, ruleChooser);
 
-            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50.rle");
+            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50-rulestring.rle");
             Point insertPoint = new Point(25, 25);
             InsertPattern(pattern, insertPoint, 0);
 
@@ -26,7 +26,7 @@ namespace GameOfLifeLib.Models.Games
         {
             base.Initialize();
 
-            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50.rle");
+            CAPattern pattern = PatternFactory.GetPieceGridFromPatternFile("RuleFiles/JustFriendsBox50-rulestring.rle");
             Point insertPoint = new Point(25, 25);
             InsertPattern(pattern, insertPoint, 0);
 

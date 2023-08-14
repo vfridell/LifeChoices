@@ -72,6 +72,9 @@
     <None Include="RuleFiles\JustFriendsBox21.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="RuleFiles\JustFriendsBox50-rulestring.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="RuleFiles\JustFriendsBox50.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -106,6 +109,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="RuleFiles\SerizawaGunship.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\ShipShip.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="RuleFiles\SpiralGrowth.rle">

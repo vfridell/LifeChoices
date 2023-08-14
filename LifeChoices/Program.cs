@@ -12,6 +12,7 @@ using GameOfLifeLib.Helpers;
 using GameOfLifeLib.Models.Games;
 using GameOfLifeLib.Models.RuleChoosers;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace LifeChoices
 {
@@ -30,23 +31,20 @@ namespace LifeChoices
         {
             Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
             {
-                { "JustFriends" , 0 },
-                // persian rugs
-                { "B234" , 2 },
-                // coral
-                { "B3/S45678" , 0 },
+                //{ "JustFriends" , 0 },
+                //{ "Seeds" , 3 },
+                { "B3/S2cekain3cekain5-n6n" , 0 },
+                //{ "B3/S23" , 0 },
+                //{ "B2-a3k46j5/S12" , 0 },
+                //{ "Life", 0},
+                //{ "B3/S4" , 6 },
+                //{"B5678/S45678" , 0}
             };
-            //Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
-            //{
-            //    //{ "Life" , 1 },
-            //    { "Seeds" , 4 },
-            //    //{ "JustFriends" , 1 },
-            //    { "Serizawa" , 0 },
-            //    //{ "B234" , 2 },
-            //    //{ "B3/S45678" , 0 },
-            //};
             ToroidGameBase game = new RandomGame(RulesRankDictionary);
 
+            //var game = new StripesGame();
+            //ToroidGameBase game = new SeedsNonIsoGame();
+            //ToroidGameBase game = new ShipShipGame();
             //ToroidGameBase game = new CoralGame();
             //ToroidGameBase game = new SeedsJustFriendsMix();
             //ToroidGameBase game = new SeedsSerizawaPeriodic();
@@ -75,7 +73,7 @@ namespace LifeChoices
 
             bool quit = false;
             List<int> msDelayList = new List<int>() { 0, 20, 50, 100, 300, 500, 1000, 2000 };
-            int msDelayIndex = 0;
+            int msDelayIndex = 3;
             int gen = 1;
             while (!quit)
             {

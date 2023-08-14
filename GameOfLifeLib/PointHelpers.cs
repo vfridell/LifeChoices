@@ -111,5 +111,129 @@ namespace GameOfLifeLib
             }
             return next;
         }
+
+
+
+        public static List<HashSet<int>> GetIsoPoints(List<GridDirection> dirs)
+        {
+            var result = new List<HashSet<int>>();
+
+            Func<Func<int, int>, HashSet<int>> IsoCheck = (t) =>
+            {
+                var hs = new HashSet<int>();
+                foreach (var dir in dirs)
+                {
+                    int pt = t((int)dir);
+                    if (hs.Contains(pt)) throw new Exception("AAA");
+                    hs.Add(pt);
+                }
+                return hs;
+            };
+            result.Add(IsoCheck(Equal));
+            var p = IsoCheck(Rotate90);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            p = IsoCheck(MirrorDiag1);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            p = IsoCheck(MirrorDiag2);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            p = IsoCheck(MirrorVert);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            p = IsoCheck(MirrorHoriz);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            p = IsoCheck(Rotate180);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            p = IsoCheck(Rotate270);
+            if (!result.Any(h => h.SetEquals(p))) result.Add(p);
+            return result;
+        }
+
+        // these only work for NeighborhoodOrder.Moore: and NeighborhoodOrder.MooreRuleTree
+        // 0|4|1
+        // _____
+        // 5|x|6
+        // -----
+        // 2|7|3
+        public static int Equal(int pos) => pos;
+        public static int MirrorDiag2(int pos)
+        {
+            switch (pos)
+            {
+                case 0: return 0;
+                case 1: return 2;
+                case 2: return 1;
+                case 3: return 3;
+                case 4: return 5;
+                case 5: return 4;
+                case 6: return 7;
+                case 7: return 6;
+                default: throw new NotImplementedException();
+            };
+        }
+        public static int MirrorDiag1(int pos)
+        {
+            switch (pos)
+            {
+                case 0: return 3;
+                case 1: return 1;
+                case 2: return 2;
+                case 3: return 0;
+                case 4: return 6;
+                case 5: return 7;
+                case 6: return 4;
+                case 7: return 5;
+                default: throw new NotImplementedException();
+            };
+        }
+
+        public static int MirrorVert(int pos)
+        {
+            switch (pos)
+            {
+                case 4: return 7;
+                case 0: return 2;
+                case 1: return 3;
+                case 2: return 0;
+                case 5: return 5;
+                case 3: return 1;
+                case 7: return 4;
+                case 6: return 6;
+                default: throw new NotImplementedException();
+            };
+        }
+
+        public static int MirrorHoriz(int pos)
+        {
+            switch (pos)
+            {
+                case 4: return 4;
+                case 0: return 1;
+                case 1: return 0;
+                case 2: return 3;
+                case 3: return 2;
+                case 6: return 5;
+                case 7: return 7;
+                case 5: return 6;
+                default: throw new NotImplementedException();
+            };
+        }
+
+        public static int Rotate90(int pos)
+        {
+            switch (pos)
+            {
+                case 4: return 6;
+                case 0: return 1;
+                case 1: return 3;
+                case 2: return 0;
+                case 5: return 4;
+                case 7: return 5;
+                case 6: return 7;
+                case 3: return 2;
+                default: throw new NotImplementedException();
+            };
+        }
+
+        public static int Rotate180(int pos) => Rotate90(Rotate90(pos));
+        public static int Rotate270(int pos) => Rotate90(Rotate90(Rotate90(pos)));
     }
 }

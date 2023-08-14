@@ -41,9 +41,13 @@ namespace GameOfLifeLib.Parsers
                 return rule;
             else
             {
-                if(LifeLikeRule.LifeLikeRuleString(name))
+                if (LifeLikeRule.LifeLikeRuleString(name))
                 {
                     rule = new LifeLikeRule(name, name);
+                }
+                else if (NonIsoTotalisticRule.LifeLikeRuleString(name))
+                {
+                    rule = new NonIsoTotalisticRule(name, name);
                 }
                 else if (name.Trim().ToLower().Equals("life"))
                     rule = new LifeRule();

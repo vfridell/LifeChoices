@@ -14,7 +14,7 @@ namespace GameOfLifeLib.Rules
         public int NumStates => 2;
         public string Name { get; protected set; }
 
-        private static Regex _ruleStringRegex = new Regex("B([0-9]+)/S([0-9]+)|B([0-9]+)");
+        private static Regex _ruleStringRegex = new Regex("^B([0-8]+)/S([0-8]+)$|^B([0-8]+)$");
         
         public LifeLikeRule(string name, string ruleString)
         {
