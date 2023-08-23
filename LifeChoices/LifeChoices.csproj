@@ -78,10 +78,29 @@
     <None Include="RuleFiles\JustFriendsBox50.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="RuleFiles\lifecolor.table" />
     <None Include="RuleFiles\PersianRugs.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="RuleFiles\PilotSmall.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\SalvoGliderGun.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\SalvoGliderGun2.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\SalvoGliderGun3.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\SalvoGliderGun4.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\SalvoGliderGun5.rle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="RuleFiles\SalvoGliderGun6.rle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="RuleFiles\SeedsJustFriendsStrangeBlinker.rle">

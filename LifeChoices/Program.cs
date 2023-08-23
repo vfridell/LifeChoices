@@ -32,17 +32,26 @@ namespace LifeChoices
             Dictionary<string, int> RulesRankDictionary = new Dictionary<string, int>()
             {
                 //{ "JustFriends" , 0 },
-                //{ "Seeds" , 3 },
-                { "B3/S2cekain3cekain5-n6n" , 0 },
-                //{ "B3/S23" , 0 },
+                //{ "Serizawa" , 1 },
+                //{ "Pilot" , 0 },
+
+                // "Ameyalli" rule (idealized)
+                //{ "B2ci3ar5q/S01e2ek3qj4t5y" , 0 },
+                // "Ameyalli" rule
+                //{ "B2ci3ar4krtz5cq6c7ce/S01e2ek3qj4kt5ceayq6cki7c8" , 0 },
+                
+                { "B2a/S12" , 2 },
+                { "B2-a/S12" , 0 },
+                //{ "B1" , 0 },
                 //{ "B2-a3k46j5/S12" , 0 },
                 //{ "Life", 0},
                 //{ "B3/S4" , 6 },
                 //{"B5678/S45678" , 0}
             };
-            ToroidGameBase game = new RandomGame(RulesRankDictionary);
+            //ToroidGameBase game = new RandomGame(RulesRankDictionary);
 
             //var game = new StripesGame();
+            ToroidGameBase game = new SalvoGliderGuns();
             //ToroidGameBase game = new SeedsNonIsoGame();
             //ToroidGameBase game = new ShipShipGame();
             //ToroidGameBase game = new CoralGame();
